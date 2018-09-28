@@ -1,0 +1,132 @@
+var RetailerFrame = {
+
+	id: 0, // uniquer identifier
+
+	ui: {
+		retailBtnID: 'retailers-find-btn-',
+		retailerModalID: 'retailers-modal-',
+		modalOverlayID: 'retailers-modal-overlay-',		
+		modalCloseBtnID: 'retailers-close-btn-'
+	},
+
+	retailURLDomain: '//www.nintendo.com/',
+	retailURLDirectory: 'popup/retailers/', 
+
+	insert: function ($params){
+		var iframeSrc,
+			previewClass = 'preview-content',
+			suite = "";
+			query = "";
+			darkTheme = "";
+			langString = "";
+
+		this.id = Math.round( Math.random() * 9999 );
+				
+		if( $params.locale ){
+			switch( $params.locale ){
+				case "en_CA":
+					langString = "en_CA/";
+					break;
+				case "fr_CA":
+					langString = "fr_CA/";
+					break;
+			}
+		}
+
+		iframeSrc = this.retailURLDomain + langString + this.retailURLDirectory;
+		
+		if ( $params.gameID && !$params.query ){
+			iframeSrc += $params.gameID;
+		}
+		
+		if ( $params.query ){
+			query += "&s="+$params.query;
+			
+			if ($params.hide){
+				query += "&h=" + $params.hide;
+			}
+			
+		}
+
+		if(typeof Omniture != 'undefined'){
+			query += "&o="+Omniture.suite;
+		}	
+		
+		if ( $params.dark ){
+			query += "&t=dark";
+			darkTheme = " dark-theme";
+		}
+		
+		if ( $params.class ) {
+			previewClass += " "+$params.class;
+		}
+		
+		if ( query != "" ){
+			iframeSrc = iframeSrc + "?" + query.substr(1, query.length);
+		}
+		
+		var btn_html = '<a href="'+ iframeSrc +'" class="btn-retailers" id="' + this.ui.retailBtnID + this.id +'">Find a Retailer</a>';
+		var overlay_html = '<div class="preview-overlay preview-close" id="'+ this.ui.modalOverlayID + this.id +'"></div>';
+		var modal_html = '<div class="preview-container retailers-modal" id="' + this.ui.retailerModalID + this.id + '" data-system="'+$params.platform+'"><a class="preview-close icon-x-thick close-modal" href="#" id="' + this.ui.modalCloseBtnID + this.id + '">Close Preview</a><div class="'+previewClass+darkTheme+'"><iframe id="retailers-modal-iframe" src="'+iframeSrc+'"> </iframe></div></div>';
+		var iframe_html = '<div class="responsive-iframe-container darkTheme"><iframe allowTransparency="true" class="retailers-modal-iframe" id="retailers-modal-frame" src="'+iframeSrc+'"></iframe></div>';
+		
+		
+		if ($params.modal) {
+
+            var rVal = "255",
+                gVal = "255",
+                bVal = "255";
+            var overlay_container = document.createElement('div');
+            var button_container = document.createElement('span');
+
+            button_container.innerHTML = btn_html;
+            document.querySelector($params.target).appendChild(button_container);
+
+            overlay_container.innerHTML = overlay_html + modal_html;
+            document.body.appendChild(overlay_container);
+			
+			if ( $params.overlay ){
+				var overlayHex = ($params.overlay.charAt(0)==="#") ? $params.overlay.substring(1,7) : $params.overlay;
+				rVal = parseInt(overlayHex.substring(0,2),16);
+				gVal = parseInt(overlayHex.substring(2,4),16);
+				bVal = parseInt(overlayHex.substring(4,6),16);	
+			}
+
+			document.querySelector( "#" + this.ui.modalOverlayID + this.id ).style.backgroundColor = 'rgba('+rVal+','+gVal+','+bVal+',.5)';
+
+			this.enableEvents();
+			
+		} else {
+			document.querySelector($params.target).innerHTML = iframe_html;
+		}
+
+		
+	},
+	enableEvents: function () {
+
+		var self = this
+		document.addEventListener('click', function(event) {
+			var id = event.target.id;
+			switch(id) {
+				case ( self.ui.retailBtnID + self.id ):
+					event.preventDefault();
+					self.showModal(); 
+					break;
+				case self.ui.modalOverlayID:
+				case ( self.ui.modalCloseBtnID + self.id ):
+					event.preventDefault();
+					self.closeModal(); 
+					break;
+			}
+		});
+
+	},
+	showModal: function () {
+		document.querySelector( "#" + this.ui.modalOverlayID + this.id ).style.display = 'block'; 
+        document.querySelector( "#" + this.ui.retailerModalID + this.id ).style.display = 'block';
+	},
+	closeModal: function () {
+		document.querySelector( "#" + this.ui.modalOverlayID + this.id ).style.display = 'none'; 
+    	document.querySelector( "#" + this.ui.retailerModalID + this.id ).style.display = 'none';
+	}
+}

@@ -1,0 +1,622 @@
+/*
+
+
+	Responsive slider with 1:1 swipe and animation/transition support:
+		- Snaps to current carousel item.
+		- Individual slide width is calculated from parent container.
+		- Sets 'transition-in' and 'transition-out' and 'active' during movement.
+		- Supports swipe throwing
+		- Requires no external CSS for basic behaviors
+	
+	************************
+
+	Basic HTML Structure:
+
+	NOTE: Individual slides must use the 'slide' class by default. 
+		  This can be changed with the 'childrenClass' optional argument.
+
+	<div id="some-id">
+
+		<div class="slide">...</div>
+		<div class="slide">...</div>
+		<div class="slide">...</div>
+
+	</div>
+
+	************************
+
+	TODO:
+
+		- Track mouse speed to 'throw' slide
+
+*/
+
+
+
+var NIN = NIN || {};
+
+(function(  $objNS  ) {
+	'use strict';
+
+	$objNS.slider = function( $target, $objOptions ) {
+		
+		// CONSTANTS
+		var ACTIVE_CLASS = "is-active",
+			TRANSITION_IN_CLASS = "transition-in",
+			TRANSITION_OUT_CLASS = "transition-out",
+			TRANSITION_EVENT = transitionEndEventName();
+
+		// UI
+		var ui = {
+			target			    : null,
+			container 		    : null,
+			slides			    : null,
+			navContainer	    : null,
+			paginationContainer	: null,
+			body			    : $('body'),
+			win 			    : $(window)
+		}
+
+		ui.target = $($target);
+
+		// Configuration
+		var objOptions = {
+
+			autoPlay				 : false,
+			autoPlaySpeed			 : 5,
+			animationSpeed 			 : .8,
+			startupDelay				 : 0, 	//additional time added to the first slide before autoplay takes over
+			animationEase			 : "ease-in-out",
+
+			snapSpeed 				 : 0.3,
+			snapEase				 : "cubic-bezier(0.175, 0.885, 0.320, 1.275)", // ease out back
+
+			containerClass 			 : "ncarousel",
+			childrenClass  			 : "slide",
+
+			nav 		   			 : false, // target DOM element
+			navClass 	   			 : 'ncarousel-nav', // navClass + "-previous", "-next". eg: 'ncarousel-nav-next'
+
+			pagination	   			 : false, // target DOM element
+
+			loop 					 : false, // true, false or 'infinite'
+			infiniteDupe    		 : 1, // how many elements are duplicated to create the infinite illusion. Supports a number or 'all'
+										  // for full width sliders, 1 is sufficient
+			
+			overflow				 : "hidden", // css property  
+
+			swipe 					 : true, // enable swiping navigation
+			swipeThrowStrength		 : 15, // swiping faster than 'strength' will throw the slider to the next slide
+			swipeThreshold 			 : .4, // percent of movement required to initiate a slide change on touch release
+			swipeStopScrollThreshold : 5, // touch move amount before disabling Y scrolling
+	 
+			onChangeStart			 : null,
+			onChangeEnd				 : null
+		}
+
+		// replace default objOptions with instantiated values
+		if( $objOptions ) {
+			for (var key in $objOptions) {
+				objOptions[key] = $objOptions[key];
+			}
+		}
+
+		
+
+
+		// Properties
+		var slideAmount, slideAmountZeroBased, currentSlide, lastSlide, autoPlayInterval = null, transitionEndInterval = null, resetAnimationEaseInterval,
+			touchX, touchY, currentSlideTouchPosition, touchDelta, lastTouchDelta, touchMoveStrength, swipeDirection, swipeThresholdLimit,
+			sliderWidth, isInfinite,
+			infiniteDupe = objOptions.infiniteDupe, // how many elements are duplicated to create the infinite illusion
+			endMinSlide; // the end of the slide, not including duplicates
+
+
+		// Methods
+		function _initialize() {
+
+			isInfinite = (objOptions.loop === "infinite") ? true : false;
+
+			initCarouselDOM();
+			initNav();
+			initPagination();
+
+			onResize();
+			bindEvents();
+			
+			goTo( isInfinite ? infiniteDupe : 0 );
+			
+		}
+
+		function initCarouselDOM() {
+
+			// set up DOM structure & styles
+			ui.target.css( "overflow", objOptions.overflow );
+			ui.target.wrapInner("<div class=" +objOptions.containerClass+ "></div>");
+			
+			ui.container = ui.target.children( "." + objOptions.containerClass );
+
+			ui.slides = ui.container.children( "." + objOptions.childrenClass );
+			ui.slides.css( { 
+				"float": "left",
+				"display": "block"
+			});
+
+			slideAmount = ui.slides.length;
+			slideAmountZeroBased = slideAmount - 1;
+
+			if ( isInfinite ) {
+				infiniteDupe = ( infiniteDupe === "all" ) ?  slideAmount : infiniteDupe;
+				
+				// dupe end
+				var lastSet = infiniteDupe * -1;
+				var frontDupe = ui.slides.slice( lastSet ).clone();
+
+				// dupe first
+				var endDupe = ui.slides.slice( 0, infiniteDupe ).clone();
+
+				frontDupe.prependTo( ui.container );
+				endDupe.appendTo( ui.container );
+
+				// recache
+				ui.slides = ui.container.children( "." + objOptions.childrenClass );
+
+				slideAmount = ui.slides.length;
+				slideAmountZeroBased = slideAmount - 1;
+				endMinSlide = slideAmount - infiniteDupe;
+			}
+
+			ui.container.css({
+				"width": (slideAmount * 10) + ""+ slideAmount + "%", // if 2 = 202%, 303%, etc
+				"position": "relative",
+				"left": "0%"
+			});
+
+
+			setEase();
+
+		}
+
+
+		function initNav() {
+
+			if( objOptions.nav ) {
+				ui.navContainer = $( objOptions.nav );
+				ui.navContainer.html("<a href='prev' class="+ objOptions.navClass +"-previous>Previous</a><a href='next' class="+ objOptions.navClass +"-next>Next</a>");
+			}
+
+		}
+
+		function initPagination() {
+
+			if( objOptions.pagination ) {
+
+				ui.paginationContainer = $( objOptions.pagination );
+
+				var markup = "", length = (isInfinite) ? endMinSlide - infiniteDupe : slideAmount;
+
+				var paginationIndexHref;
+				for( var i=0; i< length; i++ ) {
+					paginationIndexHref = i + 1;
+					markup += "<a href="+ paginationIndexHref +"></a>";
+				}
+				ui.paginationContainer.html( markup );
+			}
+
+		}
+
+		function _next() {
+			goTo( currentSlide + 1 );
+		}
+
+		function _prev() {
+			goTo( currentSlide - 1 );
+		}
+
+		function _gotoExternal( slideNum, skipDisableAutoplay ) {
+
+			if( !skipDisableAutoplay ) {
+				disableAutoPlay();
+			}
+
+			if( isInfinite ) {
+				slideNum += infiniteDupe;
+			}
+
+
+			goTo( slideNum );
+		}
+
+
+		function goTo( slideNum ) {
+
+			var infiniteOriginalSlide, pagNum,
+				isDupeSlide = false;
+
+
+			lastSlide = currentSlide;			
+
+			// Loop settings
+			if( isInfinite ) {
+
+				if( slideNum === endMinSlide ) {
+					slideNum = endMinSlide;
+					infiniteOriginalSlide = infiniteDupe;
+					isDupeSlide = true;
+
+				} else if ( slideNum < infiniteDupe  ) {
+					slideNum = infiniteDupe - 1;
+					infiniteOriginalSlide = endMinSlide - 1;
+					isDupeSlide = true;
+				}
+
+
+
+			} else if( objOptions.loop === true ) {
+
+				if( slideNum === slideAmount ) {
+					slideNum = 0;
+				} else if ( slideNum === -1  ) {
+					slideNum = slideAmountZeroBased;
+				}
+
+			} else {
+
+				if( slideNum >= slideAmount || slideNum < 0 ) {
+					return false;
+				}
+
+			}
+
+			onChangeStartCallback( lastSlide, slideNum );
+			
+			// set transitioning class
+			if( slideNum > lastSlide ) {
+				setTransitioningState( "left" );
+			} else if ( slideNum < lastSlide ) {
+				setTransitioningState( "right" );
+			}
+
+			// set active slide elements
+			currentSlide = slideNum;
+
+			scrollSliderTo( slideNum );
+
+			setActive( ui.container, currentSlide );
+
+			if( objOptions.pagination && !isDupeSlide ) {
+				pagNum = (isInfinite) ? currentSlide-infiniteDupe : currentSlide;
+
+				setActive( ui.paginationContainer, pagNum );
+			}
+
+			if( isDupeSlide ) {
+				setActive( ui.container, infiniteOriginalSlide, true ); // activate original aswell
+
+				if( objOptions.pagination ) {
+					pagNum = (isInfinite) ? infiniteOriginalSlide-infiniteDupe : infiniteOriginalSlide;
+
+					setActive( ui.paginationContainer, pagNum );
+				}
+				
+			}
+
+			
+			// autoplay
+			if( objOptions.autoPlay === true ) {
+				clearTimeout( autoPlayInterval );
+				autoPlayInterval = setTimeout( _next, (objOptions.autoPlaySpeed + objOptions.animationSpeed + objOptions.startupDelay) * 1000 );
+				objOptions.startupDelay = 0;
+			}
+
+			// console.log("Going to: "+ slideNum +" out of "+ slideAmountZeroBased);
+			
+		}
+
+		function onGotoComplete() {
+			setTransitioningState();
+
+			if( isInfinite ) {
+
+				// to create the illusion of infinit scrolling, we jump to the begining/end
+
+				var dupeFastScroll = null;
+				if( currentSlide >= endMinSlide ) {
+					dupeFastScroll = infiniteDupe;
+				} else if( currentSlide <= infiniteDupe-1 ) {
+					dupeFastScroll = endMinSlide - 1;
+				}
+				
+				
+				if( dupeFastScroll ) {
+
+					currentSlide = dupeFastScroll;					
+					removeEase();
+					scrollSliderTo( dupeFastScroll, true );
+					setTimeout(function() {
+						setEase();
+					}, 200);
+				
+				}
+				
+			}
+
+			if( lastSlide !== currentSlide ) {
+				onChangeEndCallback( lastSlide, currentSlide );
+			}
+			
+		}
+
+		function setActive( el, slideNum, disableClassRemove ) {
+			if( !disableClassRemove ) {
+				el.children( '.' + ACTIVE_CLASS ).removeClass( ACTIVE_CLASS );
+			}
+			
+			el.children().eq( slideNum ).addClass( ACTIVE_CLASS );
+		}
+
+		function scrollSliderTo( slideNum, skipCompleteTrigger ) {
+			ui.container.css( "left", slideNum * -100 +"%" ) // .one( TRANSITION_EVENT, onGotoComplete.bind(this)); //inconsistent with easing
+
+			if( !skipCompleteTrigger ) {
+
+				clearTimeout( transitionEndInterval );
+
+				transitionEndInterval = setTimeout(function() {
+
+					onGotoComplete();
+
+				}.bind(this), objOptions.animationSpeed * 1000 );
+
+			}
+			
+		}
+
+		function removeEase() {
+			ui.container.css({
+				"transition": "none"
+			});
+
+		}
+
+		function setEase( customSpeed, customEase ) {
+
+			var animSpeed = customSpeed || objOptions.animationSpeed,
+				animEase = customEase || objOptions.animationEase;
+
+			if( customSpeed || customEase ) {
+				// if custom speed set, reset after animation is done
+				resetAnimationEaseInterval = setTimeout( setEase, animSpeed * 1000 );
+			}
+
+			ui.container.css({
+				"transition": "left "+ animSpeed +"s "+ animEase // vendor prefix added automatically
+			});
+		}
+
+		function disableAutoPlay() {
+			clearTimeout( autoPlayInterval );
+			objOptions.autoPlay = false;
+		}
+
+		function setTransitioningState( direction ) {
+			
+			if( direction ) {
+				var directionIndex = ( direction === "right" ) ? -1 : 1;
+
+				ui.container.children( '.' + ACTIVE_CLASS ).addClass( TRANSITION_OUT_CLASS );
+				ui.container.children().eq( currentSlide + directionIndex ).addClass( TRANSITION_IN_CLASS );
+
+			} else {
+				// no direction, remove
+				ui.container.children( '.' + TRANSITION_OUT_CLASS ).removeClass( TRANSITION_OUT_CLASS );
+				ui.container.children( '.' + TRANSITION_IN_CLASS ).removeClass( TRANSITION_IN_CLASS );
+
+			}
+			
+		}
+
+		function setSwipeTreshold() {
+			swipeThresholdLimit = sliderWidth * objOptions.swipeThreshold;
+		}
+
+		// Modernizr transitionEnd
+		function transitionEndEventName () {
+		    var i,
+		        undefined,
+		        el = document.createElement('div'),
+		        transitions = {
+		            'transition':'transitionend',
+		            'OTransition':'otransitionend',  // oTransitionEnd in very old Opera
+		            'MozTransition':'transitionend',
+		            'WebkitTransition':'webkitTransitionEnd'
+		        };
+
+		    for (i in transitions) {
+		        if (transitions.hasOwnProperty(i) && el.style[i] !== undefined) {
+		            return transitions[i];
+		        }
+		    }
+
+		}
+
+		function onResize() {
+
+			ui.slides.css( "width", ui.target.width() );
+
+			sliderWidth = ui.slides.eq( 0 ).width();
+			setSwipeTreshold();
+
+		}
+
+		function onNavClick( e ) {
+			e.preventDefault();
+
+			disableAutoPlay();
+
+			if( $(this).attr("href") === "next" ) {
+				_next();
+			} else {
+				_prev();
+			}
+
+		}
+
+		function onPaginationClick( e ) {
+			e.preventDefault();
+
+			disableAutoPlay();
+
+			var gotoIndex = parseInt( $(this).attr("href") );
+
+			goTo( gotoIndex ); 
+
+		}
+
+		function onTouchStart( e ) {
+			touchX = e.originalEvent.touches[0].pageX;
+			touchY = e.originalEvent.touches[0].pageX;
+	        currentSlideTouchPosition = ui.container.position();
+	        touchDelta = 0;
+
+	        ui.container.on( "touchmove", onTouchMove );
+			ui.container.on( "touchend", onTouchEnd );
+		}
+
+		function onTouchMove( e ) {
+			disableAutoPlay();
+
+			var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+
+			swipeDirection = (touchX > touch.pageX) ? "left" : "right";	
+
+		    touchDelta = (touch.pageX - touchX);
+
+			if( touchDelta < -objOptions.swipeStopScrollThreshold || touchDelta > objOptions.swipeStopScrollThreshold) {
+				// stop browser scrolling
+				e.preventDefault();
+			}
+
+
+			// if swiping pass slide amount, sim resistance 
+			if( (swipeDirection === "left" && currentSlide >= slideAmountZeroBased) ||
+				(swipeDirection === "right" && currentSlide <= 0) ) {
+				touchDelta /= 4;
+			} else {
+				setTransitioningState( swipeDirection );
+			}
+			
+			if( lastTouchDelta ) {
+				touchMoveStrength = Math.abs( touchDelta - lastTouchDelta );
+			}
+			lastTouchDelta = touchDelta;
+			
+			// move with touch
+
+			var moveAmountPercent = ( currentSlideTouchPosition.left + touchDelta ) / sliderWidth * 100;
+			removeEase();
+			ui.container.css({
+				"left": moveAmountPercent + "%"
+			});
+
+		}
+
+		function onTouchEnd( e ) {
+
+			setEase( objOptions.snapSpeed, objOptions.snapEase );
+
+			if ( touchDelta < -swipeThresholdLimit || touchDelta > swipeThresholdLimit || touchMoveStrength >= objOptions.swipeThrowStrength ) {
+
+		    	if( swipeDirection === "left" && currentSlide < slideAmountZeroBased ) {
+					_next();
+				} else if( swipeDirection === "right" && currentSlide > 0 ) {
+					_prev();
+				} else {
+					goTo( currentSlide );
+				}
+
+			} else {
+				goTo( currentSlide );
+			}
+
+			swipeDirection = "";
+
+			ui.container.off( "touchmove", onTouchMove );
+			ui.container.off( "touchend", onTouchEnd );
+		}
+
+		function onChangeStartCallback( prevIndex, nextIndex ) {
+			if( typeof objOptions.onChangeStart === 'function' ) {
+
+				// normalize inifinite index
+				if( isInfinite ) {
+					
+					prevIndex-=infiniteDupe;
+
+					if( nextIndex < endMinSlide ) {
+						nextIndex -= infiniteDupe;
+					} else {
+						nextIndex = 0;
+					}
+
+				}
+
+				objOptions.onChangeStart({
+					currentSlide: prevIndex,
+					nextSlide: nextIndex
+				});
+			}
+		}
+
+
+		function onChangeEndCallback( prevIndex, currentIndex ) {
+			if( typeof objOptions.onChangeEnd === 'function' ) {
+
+				if( isInfinite ) {
+					
+					prevIndex--;
+					currentIndex--;
+
+				}
+
+				objOptions.onChangeEnd({
+					currentSlide: currentIndex,
+					prevSlide: prevIndex
+				});
+			}
+		}
+	
+
+		function bindEvents() {
+
+			ui.win.resize(function() {
+				onResize();
+			});
+
+			if( objOptions.nav ) {
+				ui.navContainer.children("a").on( "click", onNavClick );
+			}
+
+			if( objOptions.pagination ) {
+				ui.paginationContainer.children("a").on( "click", onPaginationClick );
+			}
+
+			if( objOptions.swipe ) {
+				ui.container.on( "touchstart", onTouchStart );
+			}
+			
+
+		}
+
+		return {
+			initialize: _initialize,
+			go: _gotoExternal,
+			next: _next,
+			prev: _prev,
+			options: objOptions
+		};
+
+	}
+
+
+})(NIN);

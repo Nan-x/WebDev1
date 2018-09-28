@@ -1,0 +1,249 @@
+div#nclude-global-nav .nclude-global-nav-wrapper {
+	min-width: inherit;
+}
+
+/* Responsive changes */
+
+.icon-menu {
+	background: url(../img/globalnav/icon-menu.png) no-repeat center center;
+}
+
+.icon-search {
+	background: url(../img/globalnav/icon-search-mobile.png) no-repeat center center;
+}
+
+
+
+/* 	================================================
+
+	GLOBAL NAV TABLET VIEW
+
+	================================================ */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+
+	.nclude-global-hide-tablet {
+		display: none !important;
+	}
+
+
+
+}
+
+
+/* 	================================================
+
+	GLOBAL NAV MOBILE VIEW / TABLET
+
+	================================================ */
+@media screen and (max-width: 768px) {
+
+/*	-----------------------------------
+	Global Header
+	----------------------------------- */
+
+	/* --- Ensures that page does not have horizontal scrolling --- */
+	div#nclude-global-nav-container {
+		width: 100%;
+		height: inherit;
+		overflow: hidden;
+		box-shadow: 0 3px 5px rgba(0,0,0,.2);
+		position: relative;
+		z-index: 10009;
+	}
+
+	/* when open, this overlay is used to close the site on click */
+	#nclude-global-nav-drawer nav {
+		position: relative;;
+		z-index: 5;
+	}
+	#nclude-site-overlay {
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		left: 0;
+		top: 0;
+		z-index: 4;
+	}
+
+	/* --- Header Bar --- */
+	div#nclude-global-nav,
+	div#nclude-global-nav.pin {
+		height: 50px;
+		padding: 10px 0;
+		position: relative; /* Remove this to pin global nav on mobile. */
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+		/* Nintendo Logo */
+		div#nclude-global-nav h1 {
+			float: none;
+			height: 30px;
+			margin: auto;
+			width: 120px;
+		}
+			div#nclude-global-nav h1 a:before {
+				font-size: 30px;
+			}
+
+		/* Search */
+		div.nclude-global-nav-search input[type="search"] {
+			width: 65%;
+		}
+		div.nclude-global-nav-search input[type="submit"] {
+			width: 30%;
+		}
+
+	/* not pinning */
+	#nclude-global-nav-space {
+		display: none;
+	}
+
+	.nclude-global-hide-mobile {
+		display:none !important;
+	}
+
+	.nclude-global-hide-desktop {
+		display:inherit !important;
+	}
+
+}
+
+/* --- Flyout Drawer - Tablet/Mobile --- */
+
+.nclude-global-nav-drawer-content {
+	position: relative;
+	left: 0;
+}
+
+
+
+#nclude-global-nav-drawer {
+	background: #efefef;
+	min-height: 100%;
+	position: absolute;
+	width: 80%;
+	top: 0;
+	left: -80%;
+	z-index: 10010;
+	-webkit-backface-visibility: hidden;
+}
+	/* Sections */
+	#nclude-global-nav-drawer ul {
+		margin: 0;
+		padding: 0;
+	}
+
+	#nclude-global-nav-drawer li {
+		border-top: 1px solid #d1d1d1;
+		/*height: 50px;*/
+		padding-bottom: 20px;
+		list-style-type: none;
+	}
+		/* Links */
+		#nclude-global-nav-drawer li a {
+			color: #484848;
+			display: block;
+			font-family: 'Lato';
+			font-size: 18px;
+			height: 100%;
+			line-height: 30px;
+			padding: 10px 20px;
+			font-weight: normal;
+		}
+		/* Search */
+		#nclude-global-nav-drawer li.nclude-global-nav-search {
+			background: #d1d1d1;
+			padding: 10px 20px;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+		}
+			#nclude-global-nav-drawer input {
+				height: 30px;
+			}
+			#nclude-global-nav-drawer input[type="search"] {
+				border-radius: 17px 0 0 17px;
+				font-size: 18px;
+				width: -webkit-calc(100% - 40px);
+				width: calc(100% - 40px);
+			}
+			#nclude-global-nav-drawer input[type="submit"] {
+				border-bottom-left-radius: 0;
+				border-bottom-right-radius: 17px;
+				border-top-left-radius: 0;
+				border-top-right-radius: 17px;
+				border-radius: 0 17px 17px 0;
+				font-size: 22px;
+				width: 30px;
+			}
+
+
+/* --- Animate Drawer Open/Close --- */
+
+.nclude-global-nav-drawer-content {
+	-webkit-backface-visibility: hidden;
+	box-shadow: 0 -10px 25px rgba(0,0,0,0.2);
+	display: block;
+	overflow: hidden;
+	position: relative;
+	width: 100%;
+	z-index: 10011;
+}
+
+#nclude-global-nav-drawer,
+.nclude-global-nav-drawer-content,
+.nclude-global-nav-mobile-drawer-nowrap div#nclude-global-nav {
+	-webkit-transition: all .3s ease-in-out;
+	   -moz-transition: all .3s ease-in-out;
+		-ms-transition: all .3s ease-in-out;
+		 -o-transition: all .3s ease-in-out;
+			transition: all .3s ease-in-out;
+}
+
+.nclude-global-nav-mobile-drawer-open div#nclude-global-nav-drawer {
+	left: 0;
+}
+
+.nclude-global-nav-mobile-drawer-open .nclude-global-nav-drawer-content,
+.nclude-global-nav-mobile-drawer-nowrap.nclude-global-nav-mobile-drawer-open div#nclude-global-nav {
+	left: 80%;
+}
+
+.nclude-global-nav-mobile-drawer-open #nclude-site-overlay {
+	display: block;
+}
+
+/* -- If drawer will not support moving body content -- */
+.nclude-global-nav-mobile-drawer-nowrap #nclude-global-nav-drawer {
+	/*top: 50px;*/
+	box-shadow: 0 -10px 25px rgba(0,0,0,0.2);
+}
+
+
+
+/* 	================================================
+
+	FOOTER
+
+	================================================ */
+
+#footer-nintendologo-container {
+	padding-top:10px;
+	height:54px;
+}
+#footer-gamelogo-wii-container {
+	height:80px;
+}
+#footer-gamelogo-ds-container, #footer-clubn-container, #footer-nwificonnection-container {
+	height:85px;
+}
+#footer-gamelogo-3ds-container, #footer-gamelogo-ds-container{
+	height:65px;
+}
+#footer-followus-container {
+	min-height:70px !important;
+}
+#newsletter-container {
+	height:69px;
+}

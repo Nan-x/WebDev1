@@ -1,0 +1,216 @@
+div.preview-overlay {
+  height: 100%;
+  left: 0;
+  top: 0;
+  position: fixed;
+  width: 100%;
+  z-index: 1;
+}
+
+.dark-theme {
+	background-color: #000000;
+}
+
+div.preview-container {
+  background: #fff;
+  box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+  max-width: 100%;
+  /*opacity: 0*/;
+  position: absolute;
+  width: 600px;
+  z-index: 2;
+  min-height: 200px;
+}
+
+	div.preview-container div.preview-content {
+	  border-bottom: 5px solid #dadada;
+	  border-top: 30px solid #dadada;
+	}
+	
+	
+	div.preview-container * {
+		box-sizing: border-box;
+	}
+
+
+	div.preview-container a.preview-close {
+		background: #fff;
+		border-radius: 2px;
+		height: 20px;
+		position: absolute;
+		right: 5px;
+		text-indent: -99999em;
+		text-decoration: none;
+		top: 5px;
+		width: 20px;
+		z-index: 1;
+	}
+
+		div.preview-container a.preview-close:before {
+			color: #2576bc;
+			font-size: 20px;
+			line-height: 20px;
+			width: 100%;
+			font-family: "Lato", sans-serif;
+			text-align: center;
+			top: -2px;
+			left: 1px;
+			content: "x";
+			display: block;
+			position: absolute;
+			text-indent: 0;
+		}
+
+/*.btn-retailers {
+  cursor: pointer;
+  background: #2576bc;
+  border: 1px solid #1660a0;
+  border-radius: 2px;
+  color: #fff;
+  display: inline-block;
+  font-family: 'Lato';
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 28px;
+  text-align: center;
+  text-decoration: none;
+  width: 98%;
+  -webkit-transition: all 150ms ease-in-out;
+  -moz-transition: all 150ms ease-in-out;
+  -ms-transition: all 150ms ease-in-out;
+  -o-transition: all 150ms ease-in-out;
+  transition: all 150ms ease-in-out;
+  padding: 5px 0;
+  margin: 3px 0;
+}*/
+
+
+
+
+
+
+
+div.preview-container iframe {
+	border: 0;
+	font: inherit;
+	font-size: 100%;
+	margin: 0;
+	padding: 0;
+	vertical-align: baseline;
+}
+
+.responsive-iframe-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 30px;
+    height: 0;
+    overflow: hidden;
+}
+
+.responsive-iframe-container iframe,   
+.vresponsive-iframe-container object,  
+.vresponsive-iframe-container embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+	border: 0;
+	font: inherit;
+	font-size: 100%;
+	margin: 0;
+	padding: 0;
+	vertical-align: baseline;
+}
+
+	
+	div.preview-overlay {
+		display: none;
+	}
+
+	div.retailers-modal {
+		color: #000;
+		width: 100%;
+		height: 540px;
+		left: 50%;
+		margin-left: -440px;
+		top: 200px; 
+		opacity: 1; 
+		display: none;
+		z-index: 501;
+		max-width: 880px;
+	} 
+
+	body[data-useragent*='WiiU'] div.retailers-modal
+	{
+	  height: -webkit-calc(100vh - 36px);
+	  position: fixed;
+	  top: 36px;
+	  z-index: 3;
+	}
+	
+	@media screen and (max-width: 880px) {
+		div.retailers-modal {
+			left: 0;
+			width: 100%;
+			margin-left: 0;
+		}
+	}
+	
+	@media screen and (max-width: 768px) {
+		div.retailers-modal {
+		  height: 100vh;
+		  top:50px;
+		}
+		
+		
+					
+	}
+	
+	@media screen and (max-width: 570px) {
+		div.responsive-iframe-container {
+		  position: relative;
+		  padding-bottom: 150%;
+		  padding-top: 30px;
+		  height: 0;
+		  overflow: hidden;
+		}
+	}
+			.retailers-modal .preview-content {
+				width: 100%;
+				height: 100%;
+				padding: 0 2%;
+				
+			}
+
+			.retailers-modal div.preview-content {
+				border-color: #2576BC;
+			}
+			.retailers-modal.preview-container[data-system*="DS"] div.preview-content {
+				border-color: #CE181E;
+			}
+			.retailers-modal.preview-container[data-system*="Wii"] div.preview-content {
+				border-color: #0096c8;
+			}
+			.retailers-modal.preview-container[data-system*="amiibo"] div.preview-content{
+				border-color: #000;
+			}
+			
+			div.preview-container[data-system*="DS"] a.preview-close:before {
+			  color: #CE181E;
+			}
+			div.preview-container[data-system*="Wii"] a.preview-close:before {
+			  color: #0096c8;
+			}
+			div.preview-container[data-system*="amiibo"] a.preview-close:before {
+			  color: #000;
+			}
+			
+			
+				#retailers-modal-iframe {
+					width: 100%;
+					height: 100%;
+				}
+			
+
+	

@@ -1,0 +1,147 @@
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial;
+	background-image: url("images/.jpeg") 
+}
+
+
+}
+
+
+ul {
+	list-style-type:none;
+	margin:0px;
+	padding-width:0px;
+	position: absolute;
+	
+}
+
+li {
+	display:inline-block;
+	float: left;
+	margin-right: 1px;
+}
+
+
+li a {
+	display:block;
+	min-width:140px;
+	height: 50px;
+	text-align: center;
+	line-height: 50px;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: #fff;
+	background: #2f3036;
+	text-decoration: none;
+}
+
+
+li:hover a {
+	background: #00ffff;
+}
+
+
+li:hover ul a {
+	background: #f3f3f3;
+	color: #2f3036;
+	height: 40px;
+	line-height: 
+}
+
+li:hover ul a:hover {
+	background: #00ffff;
+	color: #fff;
+}
+
+li ul {
+	display: none;
+}
+
+li ul li {
+	display: block;
+	float: none;
+}
+
+li ul li a {
+	width: 100%;
+	min-width: 100px;
+	padding: 0 20px;
+}
+
+ul li a:hover + .hidden, .hidden:hover {
+	display: block;
+}
+
+/*Responsive Styles*/
+
+@media screen and (max-width : 760px){
+	/*Make dropdown links appear inline*/
+	ul {
+		position: static;
+		display: none;
+	}
+	/*Create vertical spacing*/
+	li {
+		margin-bottom: 1px;
+	}
+	/*Make all menu links full width*/
+	ul li, li a {
+		width: 100%;
+	} 
+}
+
+header{
+	width:100%;
+}
+
+footer#footer{
+	float:center;
+	width:100%;
+	height:15%;
+	display:block;
+}
+
+
+
+
+aside{
+	float:right;
+	width:30%;
+	height:80%;
+	padding:0px;
+
+}
+
+
+  main{
+  	float: left;
+  	display:block;
+  	height:40%;
+  	width:60%;
+  
+
+}
+
+
+ section{
+ 	float:left;
+ 	width:70%;
+ 	height:40%;
+ 	display:block;
+ 	background-color: #bbcbe5;
+
+ }  
+ #new{
+ 	height:250px;
+ 	width:350px;
+ }
+
+#acgames{
+	display: inline;
+}
+ .mario{
+ 	height:400px;
+ 	width:800px;
+ }
+
+ 
+ }

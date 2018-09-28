@@ -1,0 +1,734 @@
+body {
+	background-image: url('/assets/images/triforce-triangles.jpg');
+	background-repeat: repeat;
+	background-position: left top;
+}
+
+main {
+	padding-bottom: 2em;
+}
+
+header .zelda-com-header {
+	background-color: #BA954B;
+	text-align: center;
+}
+
+header img.zelda-com-logo {
+	width: 100%;
+    max-width: 233px;
+    margin: 1em 0 0;
+}
+
+header .zelda-com-copy {
+	font-family: "Cinzel";
+	font-size: 15px;
+	color: #B19263;
+	line-height: 16px;
+	white-space: nowrap;
+	margin: 1em 0;
+	display: inline-block;
+}
+
+
+/* GAMES SECTION */
+
+.subheader-row {
+	text-align: center;
+}
+	.subheader-row div.column:nth-child(1),
+	.subheader-row div.column:nth-child(3){
+		height: 100px;
+		padding: 0;
+	}
+
+	.subheader-row div.column:nth-child(2){
+		width: 19.99999972%;
+		padding: 0;
+	}
+		.subheader-row div.column img {
+		    margin-top: 45px;
+		}
+
+		.subheader-row div.column:nth-child(1) {
+			text-align: left;
+		}
+		.subheader-row div.column:nth-child(3) {
+			text-align: right;
+		}
+
+.console-subheader {
+	background-image: url('/assets/images/games/header-bg.jpg');
+	background-repeat: no-repeat;
+	background-position: center top;
+	background-size: cover;
+	position: relative;
+	margin: 0 30px;
+	border: 1px solid #CAA56E;
+	display: inline-block;
+	font-family: "Lato";
+	font-weight: 400;
+	font-size: 30px;
+	color: #000000;
+	line-height: 36px;
+	margin: 1em auto;
+    padding: 0.1em 0.5em;
+}
+	.console-subheader:before,
+	.console-subheader:after {
+		content: "";
+		width: 21px;
+		height: 35px;
+		position: absolute;
+		background-repeat: no-repeat;
+		background-position: center top;
+		background-size: contain;
+		display: block;
+		top: 4px;
+	}
+	.console-subheader:before {
+		background-image: url('/assets/images/games/header-left.png');
+		left: -30px;
+	}
+
+	.console-subheader:after {
+		background-image: url('/assets/images/games/header-right.png');
+		right: -30px;
+	}
+
+
+
+.carousel-section {
+	border-top: 1px solid #CAA56E;
+	border-bottom: 1px solid #CAA56E;
+	background-color: #BA954B;
+	padding: 0 0 8px;
+	margin-bottom: 1em;
+}
+
+.zelda-com-stripe {
+	border-top: 1px solid #CAA56E;
+	border-bottom: 1px solid #CAA56E;
+	background-color: #BA954B;
+	padding: 4px 0 0;
+	text-align: center;
+	margin-bottom: 0;
+	box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.81);
+    z-index: 2;
+    position: relative;
+}
+	.zelda-com-stripe h1 {
+		font-family: "Cinzel";
+		font-weight: 700;
+		font-size: 18px;
+		color: #000000;
+		line-height: 32px;
+		display: inline;
+	}
+
+.inline-img {
+	display: inline;
+}
+
+.zelda-com-btn {
+	display: block;
+	width: 100%;
+	background-image: url('/assets/images/zelda-com-button.jpg');
+	background-repeat: no-repeat;
+	background-position: center top;
+	background-size: cover;
+	border: 1px solid #FFECC6;
+	padding: 8px;
+	margin-bottom: 1em;
+	-webkit-transition: all 150ms ease-in-out;
+    -moz-transition: all 150ms ease-in-out;
+    -ms-transition: all 150ms ease-in-out;
+    -o-transition: all 150ms ease-in-out;
+    transition: all 150ms ease-in-out;
+    box-shadow: 0px 0px 0px 0px rgba(0,0,0,0);
+}
+
+	.zelda-com-btn .outer-bevel {
+		border: 1px solid #FFE3B3;
+	}
+
+		.zelda-com-btn .inner-bevel {
+			border: 1px solid #866630;
+			position: relative;
+			padding: 8px;
+			text-align: center;
+				overflow: hidden;
+		}
+			.zelda-com-btn .inner-bevel:before {
+				background-image: url('/assets/images/games/top-left.png');
+				background-repeat: no-repeat;
+				background-position: center top;
+				background-size: cover;
+				content: "";
+				width: 39px;
+				height: 39px;
+				position: absolute;
+				top: 0;
+				left: 0;
+				z-index: 2;
+			}
+
+			.zelda-com-btn .inner-bevel:after {
+				background-image: url('/assets/images/games/bottom-right.png');
+				background-repeat: no-repeat;
+				background-position: center top;
+				background-size: cover;
+				content: "";
+				width: 39px;
+				height: 39px;
+				position: absolute;
+				bottom: 0;
+				right: 0;
+				z-index: 2;
+			}
+
+			.zelda-com-btn .inner-bevel .title {
+				width: 100%;
+				display: block;
+				z-index: 1;
+				position: absolute;
+				bottom: -50px;
+				-webkit-transition: all 150ms ease-in-out;
+				-moz-transition: all 150ms ease-in-out;
+				-ms-transition: all 150ms ease-in-out;
+				-o-transition: all 150ms ease-in-out;
+				transition: all 150ms ease-in-out;
+				font-family: "Cinzel";
+				font-weight: 400;
+				font-size: 14px;
+				color: #FFFFFF;
+				line-height: 16px;
+				background: rgba(0,0,0,0.74);
+				padding: 0.5em 39px;
+				left: 0;
+			}
+
+			.zelda-com-btn:hover .inner-bevel .title {
+				bottom: 0;
+			}
+
+.zelda-com-btn:hover {
+	-ms-transform: scale(1.1,1.1);
+    -webkit-transform: scale(1.1,1.1);
+    transform: scale(1.1,1.1);
+	box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.50)
+}
+
+footer {
+	background: #020101;
+	border-top: 1px solid #866630;
+	text-align: center;
+	padding-top: 2em;
+}
+	footer p {
+		color: #ffffff;
+		padding: 1em;
+		font-family: "Lato";
+	}
+
+	footer #footer-nintendologo-container,
+	footer #footer-esrb-container,
+	footer #footer-followus-container,
+	footer #footer-privacypolicy-container,
+	footer #newsletter-container {
+	    float: none!important;
+	    display: inline-block;
+	    vertical-align: bottom;
+	}
+
+	footer #footer-nintendologo-container {
+		vertical-align: top;
+	}
+
+	@media screen and ( max-width: 570px ) {
+
+		footer #footer-nintendologo-container {
+		    width: 100%!important;
+		    margin: 0 0 2em 0 !important;
+		    display: block;
+		    text-align: center;
+		}
+	}
+
+
+
+		/*	-----------------------------------
+	Hero
+	----------------------------------- */
+
+		/*
+			To find an element's relative size (or other values):
+
+				( targetSize / contextSize ) * 100
+
+				targetSize  = the size of the element
+				contextSize = the size of the elements parent
+
+			Example using the logo:
+
+				( 325 / 1024 ) = 0.3173828125
+				0.3173828125 * 100 = 31.73828125
+		*/
+
+		.hero-container {
+			/* Changed to 000000 from 313131 because all 4 slides use 000000 */
+			background: #000000;
+		}
+
+		.wide-wrapper {
+			margin-left: auto;
+			margin-right: auto;
+			max-width: 1024px;
+			min-width: 1004px;
+			width: 1024px;
+			position: relative;
+		}
+
+		#hero-nav {
+			clear: both;
+			padding-top: 10px;
+			display: none;
+			text-align: center;
+		}
+
+			#hero-nav a {
+				padding-right: 10px;
+			}
+
+		#pagination {
+			display: none;
+			margin-top: 10px;
+			text-align: center;
+		}
+
+			#pagination a {
+				background: #BA954B;
+				border: 1px solid #BA954B;
+				display: inline-block;
+				padding: 10px;
+				margin-left: 5px;
+			}
+
+			#pagination .is-active {
+				background: rgba(255,255,255,0.00);
+				border: 1px solid #BA954B;
+			}
+
+		.slide-link {
+			display: block;
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			z-index: 5;
+		}
+
+
+		/*	-----------------------------------
+			Tabs
+			----------------------------------- */
+
+		#tabs {
+			text-align: center;
+			height: 96px;
+			position: relative;
+			margin-top: -96px;
+			z-index: 12;
+		}
+			.tab {
+				display: inline-block;
+				width: 21.7%;
+				margin: 0 1.5%;
+				padding: 0;
+				color: #ffffff;
+				height: 60px;
+				text-align: center;
+				position: relative;
+				top: 36px;
+				vertical-align: top;
+				background: #000000;
+				border: 1px solid #3B3B3B;
+
+				-webkit-transition: all 200ms ease-in-out;
+				   -moz-transition: all 200ms ease-in-out;
+				    -ms-transition: all 200ms ease-in-out;
+				     -o-transition: all 200ms ease-in-out;
+				        transition: all 200ms ease-in-out;
+			}
+
+			.tab:hover {
+				height: 70px;
+				top: 26px;
+			}
+
+			.tab:first-of-type {
+				margin-left: 0;
+			}
+
+			,tab:last-of-type {
+				margin-right: 0;
+			}
+
+			.tab.is-active {
+				border: 1px solid #B89F78;
+				border-bottom: 0;
+				color: #fff;
+				font-family: 'latoBold';
+				height: 78px;
+				top: 18px;
+			}
+
+			a.tab:hover {
+				text-decoration: none;
+			}
+
+
+			.tab .tab-logo {
+				position: absolute;
+				top: 1px;
+				left: 25px;
+
+				-webkit-transition: all 200ms ease-in-out;
+				   -moz-transition: all 200ms ease-in-out;
+				    -ms-transition: all 200ms ease-in-out;
+				     -o-transition: all 200ms ease-in-out;
+				        transition: all 200ms ease-in-out;
+			}
+				.tab:not(.is-active):hover .tab-logo {
+					top: 6px;
+					left: 21px;
+				}
+
+				.tab.is-active .tab-logo {
+					top: 9px;
+					left: 13px;
+				}
+
+			.tab-icon-frame {
+				border-radius: 4px;
+				width: 24%;
+				height: 86%;
+				position: absolute;
+				top: 4px;
+				right: 5px;
+				overflow: hidden;
+
+				-webkit-transition: all 200ms ease-in-out, background 100ms ease-in-out 150ms;
+				   -moz-transition: all 200ms ease-in-out, background 100ms ease-in-out 150ms;
+				    -ms-transition: all 200ms ease-in-out, background 100ms ease-in-out 150ms;
+				     -o-transition: all 200ms ease-in-out, background 100ms ease-in-out 150ms;
+				        transition: all 200ms ease-in-out, background 100ms ease-in-out 150ms;
+			}
+
+			.tab:not(.is-active):hover .tab-icon-frame {
+			    border-radius: 6px;
+			    width: 27%;
+				height: 88%;
+			}
+
+			.tab.is-active .tab-icon-frame {
+				width: 164px;
+				height: 180px;
+				top: -40px;
+				right: -67px;
+
+				-webkit-transition: all 200ms ease-in-out 50ms, background 100ms ease-in-out;
+				   -moz-transition: all 200ms ease-in-out 50ms, background 100ms ease-in-out;
+				    -ms-transition: all 200ms ease-in-out 50ms, background 100ms ease-in-out;
+				     -o-transition: all 200ms ease-in-out 50ms, background 100ms ease-in-out;
+				        transition: all 200ms ease-in-out 50ms, background 100ms ease-in-out;
+			}
+
+			img.tab-icon-image {
+				position: absolute;
+				top: 0;
+				left: 0;
+				max-width: 164px;
+
+				-webkit-transition: all 200ms ease-in-out;
+				   -moz-transition: all 200ms ease-in-out;
+				    -ms-transition: all 200ms ease-in-out;
+				     -o-transition: all 200ms ease-in-out;
+				        transition: all 200ms ease-in-out;
+			}
+
+			.tab.is-active img.tab-icon-image {
+				top: 0!important;
+				left: 0!important;
+				max-width: 164px!important;
+			}
+
+
+				/* Tri Force Heroes */
+
+				.tab.tri-force-heroes .tab-icon-frame {
+					background: rgba(238,179,90,1);
+				}
+					.tab.tri-force-heroes.is-active .tab-icon-frame {
+						background: rgba(0,0,0,0);
+					}
+
+				.tab.tri-force-heroes img.tab-icon-image {
+					top: -26px;
+					left: -16px;
+					width: 250%;
+				}
+
+				/* Breath of the Wild */
+
+				.tab.breath-of-the-wild .tab-icon-frame {
+					background: #386970;
+				}
+					.tab.breath-of-the-wild.is-active .tab-icon-frame {
+						background: rgba(0,0,0,0);
+					}
+				.tab.breath-of-the-wild .tab-logo {
+					width: 73px;
+				    height: 57px;
+				}
+
+					.tab.breath-of-the-wild.is-active .tab-logo {
+					    top: 5px;
+					    margin-left: 10px;
+					    width: initial;
+					    height: initial;
+					}
+
+				.tab.breath-of-the-wild img.tab-icon-image {
+					left: -45px;
+				    top: -50px;
+				}
+				.tab.breath-of-the-wild.is-active img.tab-icon-image {
+					top: 0;
+					left: 0;
+				    width: 61%;
+				    margin-top: 5%;
+				    margin-left: 3%;
+				}
+
+				/* Hyrule Warriors */
+
+				.tab.hyrule-warriors-legends .tab-icon-frame {
+					background: #742F03;
+				}
+					.tab.hyrule-warriors-legends.is-active .tab-icon-frame {
+						background: rgba(0,0,0,0);
+					}
+
+				.tab.hyrule-warriors-legends img.tab-icon-image {
+				    top: -8px;
+				    left: -15px;
+				    max-width: 80px;
+				}
+
+					.tab.hyrule-warriors-legends.is-active .tab-icon-image {
+						top: 25px!important;
+					    left: 22px!important;
+					}
+
+				.tab.hyrule-warriors-legends .tab-logo {
+				    width: 93px;
+				    top: 7px;
+				    margin-left: 10px;
+				}
+
+					@media screen and (max-width: 768px) {
+						.tab.hyrule-warriors-legends .tab-logo,
+						.tab.hyrule-warriors-legends.is-active .tab-logo {
+						    left: 50%;
+						    margin-left: 0;
+							transform: translateX(-50%);
+						}
+
+						.tab.hyrule-warriors-legends:not(.is-active):hover .tab-logo {
+							top: 10px;
+							left: 50%;
+						}
+					}
+
+				.tab.is-active.hyrule-warriors-legends .tab-logo {
+					width: auto;
+				    top: 12px;
+				}
+
+				/* Twilight Princess HD*/
+
+				.tab.twilight-princess .tab-icon-frame {
+					background: rgba(241,227,137,1);
+				}
+					.tab.twilight-princess.is-active .tab-icon-frame {
+						background: rgba(0,0,0,0);
+					}
+
+				.tab.twilight-princess img.tab-icon-image {
+				    top: -4px;
+				    left: -33px;
+				    width: 110px;
+				}
+
+				.tab.is-active.twilight-princess img.tab-icon-image {
+					z-index: 4;
+				}
+
+				.tab.is-active.twilight-princess .tab-logo {
+					top: 5px;
+					width: auto;
+				}
+
+				.tab.twilight-princess .tab-logo {
+					width: 80px;
+    				top: 3px;
+				}
+
+				.tab.twilight-princess.is-active .tab-icon-frame {
+					overflow: visible;
+				}
+
+				.tab.twilight-princess.is-active .tab-icon-image {
+					top: 20px !important;
+				}
+
+
+		@media screen and (min-width: 651px) and ( max-width: 768px ) {
+			.tab {
+				display: inline-block;
+				width: 21%;
+			}
+
+			.tab.twilight-princess .tab-logo {
+				left: 30px;
+			}
+		}
+
+
+
+		@media screen and (min-width: 651px) and ( max-width: 719px ) {
+		}
+
+		@media screen and ( max-width: 768px ) {
+			.tab-icon-frame {
+				display: none;
+			}
+
+			.tab.is-active .tab-logo {
+			    top: 9px;
+			    left: 15%;
+			}
+
+			.subheader-row div.column:nth-child(2){
+				width: 37.14285715%;
+				padding: 0;
+			}
+
+		}
+
+		@media screen and ( max-width: 650px ) {
+			/* only show active tab for mobile */
+
+			#tabs {
+				display: none;
+			}
+
+
+			#pagination {
+			    display: block;
+			    padding-top: 5px;
+			    margin-top: -27px;
+			    z-index: 1;
+			    position: relative;
+			    top: 45px;
+			}
+		}
+
+		@media screen and ( max-width: 570px ) {
+			/* only show active tab for mobile */
+			.subheader-row div.column:nth-child(2){
+				width: 54.28571429%;
+				padding: 0;
+			}
+
+		}
+
+
+
+
+		/*	-----------------------------------
+			Slides
+			----------------------------------- */
+
+		/* hide slides on load */
+		.slide {
+			display: none;
+			text-align: center;
+			opacity: 0;
+			position: relative;
+			cursor: pointer;
+			background-repeat: no-repeat;
+
+			-webkit-transition: opacity 300ms ease-in-out;
+			   -moz-transition: opacity 300ms ease-in-out;
+			    -ms-transition: opacity 300ms ease-in-out;
+			     -o-transition: opacity 300ms ease-in-out;
+			        transition: opacity 300ms ease-in-out;
+		}
+
+		.slide.is-active {
+			opacity: 1;
+		}
+
+			/* animation */
+
+			.slide.transition-out {
+				opacity: .2;
+			}
+
+			.slide.transition-in {
+				opacity: .5;
+			}
+
+		.slide img {
+			display: block;
+		}
+
+		.slide a.hero-btn {
+			background-color: rgba(0,0,0,.5);
+		}
+			.slide a.hero-btn:hover {
+				background-color: rgba(51,51,51,.75);
+			}
+
+
+.group:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+@media screen and (max-width: 1549px){
+	.wide-wrapper {
+		max-width: 96%;
+		min-width: 0px;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+
+	}
+
+	.new-hero .wide-wrapper,
+	.new-hero .wrapper {
+		max-width: 100%;
+	}
+}
+
+@media screen and (min-width: 571px) and (max-width: 930px) {
+	ul.panels {
+		padding-top: calc(200px - 20%);
+	}
+}
+
+#footer-esrb-container img {
+	border: 1px solid #fff;
+}

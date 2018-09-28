@@ -1,0 +1,59 @@
+var GlobalNav = {
+	insert: function( $params ) {
+		if (!$params.target) {
+			console.error('Must provide target parameter'); return;
+		}
+		var insertNcloodNav = function(event) {
+			$params = $params || {};
+			switch ($params.language || window.shareConfig.language) {
+			case 'fr':
+				$params.language = 'fr-ca'; break;
+			case 'es':
+				$params.language = 'es-la'; break;
+			default:
+				$params.language = 'en-us';
+			}
+			//Override z-index of header-overlay
+			var overlayCSSReset = '.header-overlay.active { z-index: 1 !important; }',
+				head = document.head || document.getElementsByTagName('head')[0],
+				style = document.createElement('style');
+
+			style.type = 'text/css';
+			if (style.styleSheet){
+			style.styleSheet.cssText = overlayCSSReset;
+			} else {
+			style.appendChild(document.createTextNode(overlayCSSReset));
+			}
+			head.appendChild(style);
+
+			var ncloodStyles = document.createElement('link');
+			ncloodStyles.rel = 'stylesheet';
+			ncloodStyles.href = '//share.nintendo.com/nclood/stable/' + $params.language + '/bundles/nav.css';
+
+			document.head.appendChild(ncloodStyles);
+			var ncloodScript = document.createElement('script');
+			ncloodScript.src = '//share.nintendo.com/nclood/stable/' + $params.language + '/bundles/nav.min.js';
+			ncloodScript.async = true;
+			ncloodScript.onload = function () {
+				var opts = { target: $params.target };
+				if ($params.active !== undefined) opts.highlight = $params.active;
+				if ($params.nav !== undefined) opts.languageSelector = $params.nav;
+				if ($params.replace !== undefined) opts.replace = $params.replace;
+				if ($params.pin !== undefined) opts.pin = $params.pin;
+				if (window.shareConfig.responsive !== undefined) opts.responsive = window.shareConfig.responsive;
+				if ($params.responsive !== undefined) opts.responsive = $params.responsive;
+				if ($params.en_url || $params.fr_url || $params.es_url) {
+					opts.languageSelector = {};
+					if ($params.en_url) opts.languageSelector[$params.en_url] = 'English';
+					if ($params.fr_url) opts.languageSelector[$params.fr_url] = 'Fran&#231;ais';
+					if ($params.es_url) opts.languageSelector[$params.es_url] = 'Espa&#241;ol';
+				}
+
+				new nclood.Nav(opts);
+			}
+			document.body.appendChild(ncloodScript);
+		};
+		if (document.readyState !== 'loading') insertNcloodNav();
+		else document.addEventListener('DOMContentLoaded', insertNcloodNav);
+	}
+}

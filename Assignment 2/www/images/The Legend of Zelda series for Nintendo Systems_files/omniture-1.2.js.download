@@ -1,0 +1,260 @@
+
+//*******
+//v 1.2.0
+var Omniture = new Object;
+//**************************
+//CONFIG BELOW
+//**************************
+
+	Omniture.prefix = "us:microsite:SITENAME:";
+	Omniture.suite = "ncomdev"; //site name
+	Omniture.channel = "us:microsite:wii:CHAN"; //Site Section
+	Omniture.prop1 = "us:PRODUCT NAME"; //Product name
+	Omniture.prop2 = ""; //Content type
+	Omniture.prop6 = ""; //Locale
+	Omniture.prop7 = ""; //Compel product ID
+	Omniture.prop10 = "SITENAME"; //Game Title
+	Omniture.prop11 = "GENRE"; //Game Genre
+	Omniture.prop12 = "PUBLISHER"; //Game Publisher
+	Omniture.prop14 = "SITETYPE"; //Site type. ie microsite
+	Omniture.prop16 = "us:microsite:SITENAME"; //site name
+
+	Omniture.productCode = "";
+
+	Omniture.link_clubN = "http://club.nintendo.com";
+	Omniture.link_newsletter = "http://t.em-news.nintendo.com/webApp/ninEmailOnlyRegistration";
+	Omniture.link_newsletter_fr = "https://t.em-news.nintendo.com/webApp/ninEmailOnlyRegistration?l=fr_CA";
+	Omniture.link_newsletter_es = "https://t.em-news.nintendo.com/webApp/ninEmailOnlyRegistration?l=es_LA";
+	Omniture.link_twitter = "http://twitter.com/share?text=";
+	Omniture.link_facebookNOA = "http://www.facebook.com/nintendo";
+	Omniture.link_twitterNOA = "http://twitter.com/NintendoAmerica";
+	Omniture.link_YoutubeNOA = "http://www.youtube.com/nintendo";
+	Omniture.default_twitter_copy = "No Twitter Copy Supplied";
+
+
+
+
+//**************************
+//END CONFIG - NO OTHER EDITING NECESSARY
+//**************************
+
+Omniture.init = function () {
+	s = (window.shareConfig.omnitureLive == false) ? s_gi("ncomdev") : s_gi(Omniture.suite);
+	s.channel = Omniture.channel;
+
+	for (ei=0; ei<32; ei++) {
+		s['prop'+ei.toString()] = Omniture['prop'+ei.toString()];
+	}
+
+}
+
+Omniture.trackPage = function (pageName, isHome, checkVanityURL) {
+
+	Omniture.init();
+
+	s.pageName = Omniture.prefix+pageName;
+
+	if(isHome) {
+		s.events = "event13";
+	} else {
+		s.events = "";
+	}
+	if (typeof checkVanityURL === 'string') {
+		s.prop24 = checkVanityURL;
+		s.server = checkVanityURL;
+	} else if (checkVanityURL) {
+		s.prop24 = document.domain;
+		s.server = document.domain;
+	} else {
+		s.prop24= "";
+	}
+
+
+	// if game with product code
+	if( Omniture.productCode ) {
+		s.evar20 = Omniture.productCode;
+		s.prop20 = Omniture.productCode;
+		s.products = ";"+Omniture.productCode;
+
+		s.events += ( s.events ) ? "," : "";
+		s.events += "prodView,event15";
+	}
+
+
+	var s_code=s.t();if(s_code)document.write(s_code);
+
+}
+
+//MANUAL TRACKING
+//tracks a custom click.
+Omniture.trackLink = function (eVars, eVarData, eventN, name, openURL, additionalProps) {
+	var addVarProps = '';
+	if (additionalProps) {
+		addVarProps = Omniture.setProps(additionalProps);
+	}
+	s.linkTrackVars = '';
+	if (Array.isArray(eVars) && Array.isArray(eVarData)) {
+		eVars.forEach(function (evarN, index) {
+			s['eVar' + evarN] = eVarData[index];
+			s.linkTrackVars += 'eVar' + evarN + ',';
+		});
+		s.linkTrackVars += 'events' + addVarProps;
+	} else {
+		s['eVar' + eVars] = eVarData;
+		s.linkTrackVars += 'eVar' + eVars + ',events' + addVarProps;
+	}
+
+	s.linkTrackEvents = 'event' + eventN;
+	s.events = 'event' + eventN ;
+	s.tl(true, 'o', name);
+	if (openURL != undefined) window.open(openURL);
+
+	//clear
+	s.events = '';
+	s.linkTrackVars = 'None';
+	s.linkTrackEvents = 'None';
+	if (Array.isArray(eVars) && Array.isArray(eVarData)) {
+		eVars.forEach(function (evarN) {
+			s['eVar' + evarN] = '';
+		});
+	} else {
+		s['eVar' + eVars] = '';
+	}
+
+	if (additionalProps) Omniture.clearUsedProps(additionalProps);
+}
+
+
+	/*
+		trackLink() uses this to add prop's for a trackLink event.
+		Returns string of props being tracked. e.g "prop7,prop8"
+	*/
+	Omniture.setProps = function ( $additionalProps ) {
+		var i,
+			length = $additionalProps.length,
+			updatedLinkTrackVar = "";
+
+		for (i = 0; i < length; i++){
+			updatedLinkTrackVar += ","+$additionalProps[i][0]; //grab propname
+			s[$additionalProps[i][0]] = $additionalProps[i][1];  //set prop to the s_code
+		}
+
+		return updatedLinkTrackVar;
+	}
+	/*
+		clear the previously used props from the s_code
+	*/
+	Omniture.clearUsedProps = function ( $additionalProps ) {
+		var i,
+			length = $additionalProps.length;
+
+		for (i = 0; i < length; i++){
+			s[$additionalProps[i][0]] = $additionalProps[i][1];
+		}
+	}
+
+//Video Tracking
+Omniture.movieLoad = function(mName, mLength, mPlayer) {
+	s.Media.open(mName,mLength,mPlayer);
+	s.Media.play(mName,0);
+}
+
+Omniture.moviePlay = function(mName, mOffsetTemp) {
+	s.Media.play(mName, mOffsetTemp);
+}
+
+Omniture.movieStop = function(mName, mOffsetTemp) {
+	s.Media.stop (mName, mOffsetTemp);
+}
+
+Omniture.movieDone = function(mName) {
+	s.Media.close (mName);
+}
+
+
+//PREDEFINED TRACKING METHODS
+Omniture.trackClubN = function(openURL) {
+	if (openURL==true){
+		var tempURL = Omniture.link_clubN;
+	}
+	Omniture.trackLink(11, Omniture.prop10, 16, "Club Nintendo", tempURL);
+}
+
+Omniture.trackNewsletter = function(openURL, refererUrl) {
+
+	Omniture.trackLink(11, Omniture.prop10, 26, Omniture.prop10);
+	if (openURL==true){
+		var tempURL = Omniture.link_newsletter;
+		if ( Footer.language == 'fr' ) {
+			tempURL = Omniture.link_newsletter_fr;
+		} else if  ( Footer.language == 'es' ) {
+			tempURL = Omniture.link_newsletter_es;
+		}
+		window.open(tempURL,'Signup');
+	}
+}
+
+Omniture.trackTwitter = function(openURL, copy) {
+	var tempStr = Omniture.default_twitter_copy;
+	if(copy != undefined) {
+		tempStr = copy;
+	}
+	Omniture.trackLink(22, "Twitter", 24, "Twitter", Omniture.link_twitter+tempStr);
+	/*
+	if(openURL) {
+		base.exitUrl(Omniture.link_twitter+tempStr);
+	}
+	*/
+}
+
+Omniture.trackFacebook = function(openURL) {
+	Omniture.trackLink(22, "Facebook", 24, "Facebook");
+	if (openURL){
+		u=location.href;
+		window.open('http://www.facebook.com/sharer.php?u='+encodeURIComponent(u)+'&'+(new Date).valueOf(),'sharer','toolbar=0,status=0,width=626,height=436');
+		//base.exitUrl('http://www.facebook.com/sharer.php?u='+encodeURIComponent(u)+'&'+(new Date).valueOf())
+	}
+}
+
+Omniture.trackFacebookNOA = function(openURL) {
+	if (openURL==true){
+		var tempURL = Omniture.link_facebookNOA;
+		//base.exitUrl(tempURL)
+	}
+	Omniture.trackLink(22, "Facebook-NOA", 24, "Facebook-NOA", tempURL);
+}
+
+Omniture.trackTwitterNOA = function(openURL) {
+	if (openURL==true){
+		var tempURL = Omniture.link_twitterNOA;
+		//base.exitUrl(tempURL)
+	}
+	Omniture.trackLink(22, "Twitter-NOA", 24, "Twitter-NOA", tempURL);
+}
+
+Omniture.trackYouTubeNOA = function(openURL) {
+	if (openURL==true){
+		var tempURL = Omniture.link_YoutubeNOA;
+		//base.exitUrl(tempURL)
+	}
+	Omniture.trackLink(22, "YouTube", 24, "YouTube", tempURL);
+
+}
+
+Omniture.exitLink = function (whichURL) {
+	s.linkTrackVars="None";
+	s.linkTrackEvents="None";
+	s.tl(whichURL, 'e', whichURL);
+}
+
+
+//OTHER METHODS
+Omniture.clear = function () {
+	s.events = "";
+	s.linkTrackVars="None";
+	s.linkTrackEvents="None";
+	for (ei=0; ei<25; ei++) {
+		//Omniture['prop'+ei.toString()] = "";
+		s['eVar'+ei.toString()] = "";
+	}
+}

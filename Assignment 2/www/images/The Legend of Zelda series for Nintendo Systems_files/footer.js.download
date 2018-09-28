@@ -1,0 +1,224 @@
+
+var Footer = {
+	nintendo_html: function () {
+		return '<div id="footer-nintendologo-container" style="width:173px; height:38px; border:0; float:left; margin:15px 15px 0 0;">\
+					<a href="http://www.nintendo.com/"><img src="'+window.shareConfig.url+'img/footer/logo_nintendo'+Footer.img_type+'.png" width="173" height="38" alt="Nintendo"/></a>\
+				</div>'
+	},
+	wii_html: function () {
+		var imgColor = (Footer.img_type == "_light") ? Footer.img_type : "";//doesnt support dark
+		return '<div id="footer-gamelogo-wii-container" style="width:112px; height:78px; border:0; float:left; margin:0px 15px 0 0;">\
+					<a href="http://www.nintendo.com/wii"><img src="'+window.shareConfig.url+'img/footer/logo_wii'+imgColor+'.png" width="112" height="78" alt="Nintendo Wii"/></a>\
+				</div>'
+	},
+	threeds_html: function () {
+		var imgColor = (Footer.img_type == "_light") ? Footer.img_type : "";
+		return '<div id="footer-gamelogo-3ds-container" style="width:177px; height:45px; border:0; float:left; margin:15px 15px 0 0;">\
+					<a href="http://www.nintendo.com/3ds"><img src="'+window.shareConfig.url+'img/footer/logo_3ds'+imgColor+'.png" width="177" height="45" alt="Nintendo 3DS"/></a>\
+				</div>'
+	},
+	ds_html: function () {
+		var imgColor = (Footer.img_type == "_light") ? Footer.img_type : "";
+		return '<div id="footer-gamelogo-ds-container" style="width:156px; height:45px; border:0; float:left; margin:15px 15px 0 0;">\
+					<a href="http://www.nintendo.com/ds"><img src="'+window.shareConfig.url+'img/footer/logo_ds'+imgColor+'.png" width="156" height="45" alt="Nintendo DS"/></a>\
+				</div>'
+	},
+	amiibo_html: function () {
+		var amiiboLink = "http://www.nintendo.com/amiibo";
+		if(Footer.language == 'fr') {
+			amiiboLink = "http://www.nintendo.com/fr_CA/amiibo";
+		} else if (Footer.language == 'es') {
+			amiiboLink = "http://www.nintendo.com/es_LA/amiibo";
+		}
+
+		return '<div id="footer-amiibo-container" style="width:78px; height:78px; border:0; float:left; margin:0px 15px 0 0;">\
+					<a href="'+amiiboLink+'"><img src="'+window.shareConfig.url+'img/footer/logo_amiibo.png" width="78" height="78" alt="amiibo"/></a>\
+				</div>'
+	},
+	nwifi_connection_html: function () {
+		return '<div id="footer-nwificonnection-container" style="width:80px; height:78px; border:0; float:left; margin:0px 15px 0 0;">\
+					<a href="http://www.nintendo.com/games/wifi"><img src="'+window.shareConfig.url+'img/footer/logo_nwifi_connection.png" width="80" height="78" alt="Nintendo Wi-Fi Connection"/></a>\
+				</div>'
+	},
+	esrb_html: function () {
+		var esrbLink = "http://www.esrb.org/ratings/ratings_guide.jsp";
+		if(Footer.language == 'fr') {
+			esrbLink = "http://www.esrb.org/ratings/ratings_guide_fr.jsp";
+		} else if (Footer.language == 'es') {
+			esrbLink = "http://www.esrb.org/ratings/ratings_guide_sp.jsp";
+		}
+
+		return '<div id="footer-esrb-container" style="border:0; float:left; margin:0px 15px 0 0;">\
+					<a href="'+esrbLink+'" target="_blank" rel="nofollow"><img src="'+Footer.esrb_image+'" alt="ESRB"/></a></div>'
+	},
+	esrb_with_descriptor_html: function (descriptor) {
+		// if light variant, add white outline around logo and descriptor
+		var border_html = (Footer.img_type == "_light") ? "solid 1px white" : "none";
+
+		var number_of_descriptors = descriptor.toLowerCase().split("<br").length;
+
+		var line_height = "";
+		if ( number_of_descriptors  > 4 ) {
+			line_height = "10px";
+		} else {
+			line_height = "14px";
+		}
+
+		var esrbLink = "http://www.esrb.org/ratings/ratings_guide.jsp";
+		if(Footer.language == 'fr') {
+			esrbLink = "http://www.esrb.org/ratings/ratings_guide_fr.jsp";
+		} else if (Footer.language == 'es') {
+			esrbLink = "http://www.esrb.org/ratings/ratings_guide_sp.jsp";
+		}
+
+		return '<div id="footer-esrb-container" style="border:0; float:left; margin:0px 15px 0 0;">\
+					<a href="'+esrbLink+'" target="_blank" rel="nofollow" style="display: table; background-color: #fff;height: 70px;overflow: hidden;vertical-align: top; border:' + border_html + ';text-decoration:none;">\
+						<div style="display: table-cell;vertical-align: middle;"><img src="'+Footer.esrb_image+'" style="border:none;display:block;" alt="ESRB"/></div>\
+						<div style="display: table-cell;vertical-align: middle;color: #000; line-height:' + line_height + ';font-size: 12px;padding:0 10px;border-width: 3px 3px 3px 0;border-color: black;border-style: solid; border-box;-moz-box-sizing: border-box;margin-left: -3px;max-width: 250px;min-width: 130px;overflow: hidden;font-family: Arial, Helvetica, sans-serif;text-align: left;">'+descriptor+'</div>\
+					</a></div>'
+	},
+	privacy_policy_html: function () {
+		var txtColor = (Footer.img_type == "_light") ? "#fff" : "#000";
+		return '<div id="footer-privacypolicy-container" style="min-width:59px;border:0; float:left; margin-right: 15px; text-align: center; vertical-align: top;">\
+				<a href="http://www.esrb.org/confirm/nintendo-confirmation.jsp" target="_blank" rel="nofollow"style="text-align: center;"><img src="'+window.shareConfig.url+'img/footer/esrb_privacy.jpg" alt="Nintendo Online Privacy Policy" style="display: inline-block;"/></a></div>';
+	},
+	followus_html_old: function () {
+		var twitter_link = (Footer.language == 'fr') ? "http://www.twitter.com/nintendocanada" : "http://www.twitter.com/nintendoamerica";
+		var imgColor = (Footer.img_type == "_light") ? Footer.img_type : "";
+		return '<div id="footer-followus-container" style="width:192px; height:50px; border:0; float:left; margin:15px 15px 0 0;">\
+					<a href="'+twitter_link+'" target="_blank" rel="nofollow"><img src="'+window.shareConfig.url+'img/footer/follow_twitter'+imgColor+'.png" width="192" height="20" alt="Follow us on Twitter" style="padding:0 0 5px 0;"/></a><br/>\
+					<a href="http://www.youtube.com/nintendo" target="_blank" rel="nofollow"><img src="'+window.shareConfig.url+'img/footer/follow_youtube'+imgColor+'.png" width="192" height="20" alt="Follow us on Youtube"/></a>\
+				</div>';
+	},
+	terms_of_use_and_privacy_policy: function() {
+		var privacy_link_lang = "Privacy Notice",
+			privacy_link = "http://www.nintendo.com/corp/privacy.jsp",
+			terms_of_use = "Terms of Use",
+			terms_of_use_link = "http://www.nintendo.com/terms-of-use";
+		if(Footer.language == 'fr') {
+			privacy_link_lang = "Politique de confidentialité";
+			privacy_link = "http://www.nintendo.com/corp/privacy_fr.jsp";
+			terms_of_use = "Conditions d’utilisation";
+			terms_of_use_link = "http://www.nintendo.com/fr_CA/terms-of-use";
+		} else if (Footer.language == 'es') {
+			privacy_link_lang = "Política de privacidad";
+			privacy_link = "http://www.nintendo.com/corp/privacy_es.jsp";
+			terms_of_use = "Términos de uso (Inglés)";
+		}
+
+		var txtColor = (Footer.img_type == "_light") ? "#fff" : "#000";
+
+		return '<a href="'+privacy_link+'" style="white-space: nowrap; display: block; font-size: 9px; vertical-align: top; line-height: normal; text-decoration: none; font-family: Arial, Helvetica, sans-serif; padding: 2px 0; color:'+txtColor+';">'+privacy_link_lang+'</a>\
+		<a href="'+terms_of_use_link+'" style="white-space: nowrap; display: block; font-size: 9px; vertical-align: top; line-height: normal; text-decoration: none; font-family: Arial, Helvetica, sans-serif; padding: 2px 0; color:'+txtColor+';">'+terms_of_use+'</a>';
+	},
+	followus_html: function () {
+		var textColor = (Footer.img_type == "_light") ? "#fff" : "#000";
+		var useLang = "Follow Us:";
+		var fb_link = "http://www.facebook.com/nintendo";
+		var twitter_link = "http://www.twitter.com/nintendoamerica";
+		if(Footer.language == 'fr') {
+			useLang = "Suivez-nous :";
+			fb_link = "https://www.facebook.com/nintendoofcanada";
+			twitter_link = "http://www.twitter.com/nintendocanada";
+		} else if (Footer.language == 'es') {
+			useLang = "Síguenos en :";
+		}
+
+		return '<div id="footer-followus-container" style="border:0; float:left; margin:0 15px 0 0; font-family:Arial, Helvetica, sans-serif; color:'+textColor+'; font-size:12px;">\
+			'+useLang+'<br/>\
+			<a id="footer-followus-container-facebook" href="'+fb_link+'" target="_blank" rel="nofollow"><img src="'+window.shareConfig.url+'img/footer/follow_facebook_solo.png" width="24" height="24" alt="Follow us on Facebook"></a>\
+			<a id="footer-followus-container-twitter" href="'+twitter_link+'" rel="nofollow" target="_blank"><img src="'+window.shareConfig.url+'img/footer/follow_twitter_solo.png" width="24" height="24" alt="Follow us on Twitter"/></a>\
+			<a id="footer-followus-container-youtube" href="http://www.youtube.com/nintendo" rel="nofollow" target="_blank"><img src="'+window.shareConfig.url+'img/footer/follow_youtube_solo.png" width="24" height="24" alt="Follow us on Youtube"/></a>' + Footer.terms_of_use_and_privacy_policy() +'</div>';
+	},
+
+	img_type: "",
+	language: window.shareConfig.language,
+	esrb_image: window.shareConfig.url+"img/footer/esrb_placeholder.gif",
+
+	insert: function ($params){
+		var final_html = "";
+		Footer.img_type = ($params.light) ? "_light" : Footer.img_type;
+		Footer.img_type = ($params.dark) ? "_dark" : Footer.img_type;
+
+		Footer.language = ($params.language != undefined) ? $params.language : window.shareConfig.language;
+
+		if ( $params.esrb != undefined && $params.esrb != false && $params.esrb != true ) {
+			switch( $params.esrb )
+			{
+				case "rp":
+					Footer.esrb_image = window.shareConfig.url+"img/footer/esrb/ratingsymbol_rp.png";
+					break;
+				case "ao":
+					Footer.esrb_image = window.shareConfig.url+"img/footer/esrb/ratingsymbol_ao.png";
+					break;
+				case "m":
+					Footer.esrb_image = window.shareConfig.url+"img/footer/esrb/ratingsymbol_m.png";
+					break;
+				case "t":
+					Footer.esrb_image = window.shareConfig.url+"img/footer/esrb/ratingsymbol_t.png";
+					break;
+				case "e10":
+					Footer.esrb_image = window.shareConfig.url+"img/footer/esrb/ratingsymbol_e10.png";
+					break;
+				case "e":
+					Footer.esrb_image = window.shareConfig.url+"img/footer/esrb/ratingsymbol_e.png";
+					break;
+				case "ec":
+					Footer.esrb_image = window.shareConfig.url+"img/footer/esrb/ratingsymbol_ec.png";
+					break;
+				default:
+					Footer.esrb_image = $params.esrb;
+			}
+
+			// if french language, use french esrb logos
+			if ( Footer.language == "fr" ) {
+				Footer.esrb_image = Footer.esrb_image.replace("img/footer/esrb/ratingsymbol_", "img/footer/esrb/ratingsymbol-f_");
+			}
+
+		}
+
+
+		final_html += ($params.nintendo) ? Footer.nintendo_html() : "";
+		final_html += (($params.wii || $params.all == "wii") && $params.wii != false) ? Footer.wii_html() : "";
+		final_html += (($params.threeds || $params.all == "threeds") && $params.threeds != false) ? Footer.threeds_html() : "";
+		final_html += (($params.ds || $params.all == "ds") && $params.ds != false) ? Footer.ds_html() : "";
+		final_html += (($params.amiibo || $params.all == "amiibo") && $params.amiibo != false) ? Footer.amiibo_html() : "";
+		final_html += ($params.nwifi) ? Footer.nwifi_connection_html() : "";
+		final_html += (($params.follow || $params.all != undefined) && $params.follow != false) ? Footer.followus_html() : "";
+		if ( ($params.esrb != undefined  || $params.all != undefined) && $params.esrb != false ) {
+			final_html += ( $params.esrb_descriptor ) ? Footer.esrb_with_descriptor_html($params.esrb_descriptor) : Footer.esrb_html();
+		}
+		final_html += (($params.privacy || $params.all != undefined) && $params.privacy != false && Footer.language != "es" && Footer.language != "fr") ? Footer.privacy_policy_html() : "";
+
+		document.querySelector($params.target).innerHTML = final_html;
+
+		//overwrite event
+		Footer.onFollowFacebookClick = ($params.onFollowFacebookClick != undefined) ? $params.onFollowFacebookClick : Footer.onFollowFacebookClick;
+		Footer.onFollowTwitterClick = ($params.onFollowTwitterClick != undefined) ? $params.onFollowTwitterClick : Footer.onFollowTwitterClick;
+		Footer.onFollowYoutubeClick = ($params.onFollowYoutubeClick != undefined) ? $params.onFollowYoutubeClick : Footer.onFollowYoutubeClick;
+		Footer.onEnableEvents();
+
+	},
+	onEnableEvents: function () {
+		document.addEventListener('click', function(event) {
+			var id = event.target.id;
+			switch(id) {
+			case 'footer-followus-container-facebook':
+				Footer.onFollowFacebookClick(); break;
+			case 'footer-followus-container-twitter':
+				Footer.onFollowTwitterClick(); break;
+			case 'footer-followus-container-youtube':
+				Footer.onFollowYoutubeClick(); break;
+			}
+		});
+	},
+	onFollowFacebookClick: function () {
+		Omniture.trackFacebookNOA();
+	},
+	onFollowYoutubeClick: function () {
+		Omniture.trackYouTubeNOA();
+	},
+	onFollowTwitterClick: function () {
+		Omniture.trackTwitterNOA();
+	}
+}

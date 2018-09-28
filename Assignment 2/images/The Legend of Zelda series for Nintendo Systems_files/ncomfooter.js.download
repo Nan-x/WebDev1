@@ -1,0 +1,100 @@
+var NCOMFooter = {
+	
+	nintendo_html: function () {
+		return '<div class="column col2">\
+					<a href="http://www.nintendo.com/" class="logo-nintendo"><img src="'+window.shareConfig.url+'img/footer/logo_nintendo_ncom.png" width="150" height="38" alt="Nintendo"/></a>\
+				</div>';
+	},	
+	
+	links_html: function () {
+		return '<ul class="footer-links">\
+					<li><a href="http://www.nintendo.com/contact">Contact Us</a></li>\
+					<li><a href="https://t.em-news.nintendo.com/webApp/ninEmailOnlyRegistration" id="footer-newsletter-link">Newsletter Signup</a></li>\
+					<li><a href="http://www.nintendo.com/corp/webform.jsp">Website Feedback</a></li>\
+				</ul>'
+	},	
+	
+	social_html: function () {
+		return '<ul class="footer-social">\
+					<li><a href="http://www.facebook.com/nintendo" class="logo-facebook" rel="nofollow" target="_blank" id="footer-followus-container-facebook">Facebook</a></li>\
+					<li><a href="http://twitter.com/NintendoAmerica" class="logo-twitter" rel="nofollow" target="_blank" id="footer-followus-container-twitter">Twitter</a></li>\
+					<li><a href="http://www.youtube.com/nintendo" class="logo-youtube" rel="nofollow" target="_blank" id="footer-followus-container-youtube">YouTube</a></li>\
+					<li><a href="http://instagram.com/nintendo" class="logo-instagram" rel="nofollow" target="_blank">Instagram</a></li>\
+				</ul>'
+	},
+	
+	privacy_policy_html: function () {
+		return '<div class="column col1 indentcol">\
+					<a href="http://www.esrb.org/confirm/nintendo-confirmation.jsp" class="footer-logo-esrb" rel="nofollow" target="_blank">\
+					<img src="'+window.shareConfig.url+'img/footer/global-footer-esrb.png" alt="Privacy Certified ESRB" />\
+				</a>\
+			</div>';		
+	},
+	copyright_html: function () {
+		return '<ul class="footer-copyright">\
+					<li>&copy; 2015 Nintendo.</li>\
+					<li>Games are property of their respective owners.</li>\
+					<li>Nintendo of America Inc. Headquarters are in Redmond, Washington</li>\
+				</ul>';	
+	},
+	
+	insert: function ($params){
+		var social_class = ($params.nintendo != false) ? "col8" : "col10";
+		var final_html = '<section class="ncom-footer-bottom">\
+					<div class="wrapper">\
+						<div class="row">';
+		final_html += ($params.nintendo != false) ? NCOMFooter.nintendo_html(): "";	
+		final_html += ($params.social != false || $params.links != false) ? '<div class="column ' + social_class + '">' : "";
+		final_html += ($params.links != false) ? NCOMFooter.links_html() : "";
+		final_html += ($params.social != false) ? NCOMFooter.social_html() : "";
+		final_html += ($params.social != false || $params.links != false) ? '</div>' : "";
+		final_html += ($params.privacy != false) ? NCOMFooter.privacy_policy_html() : "";		
+		final_html += '</div>';
+		final_html += ($params.copyright != false) ? NCOMFooter.copyright_html() : "";
+		final_html += '</div>\
+				</section>';
+
+		document.querySelector($params.target).innerHTML = final_html;
+		
+		//overwrite event
+		NCOMFooter.onFollowFacebookClick = ($params.onFollowFacebookClick != undefined) ? $params.onFollowFacebookClick : NCOMFooter.onFollowFacebookClick;
+		NCOMFooter.onFollowTwitterClick = ($params.onFollowTwitterClick != undefined) ? $params.onFollowTwitterClick : NCOMFooter.onFollowTwitterClick;
+		NCOMFooter.onFollowYoutubeClick = ($params.onFollowYoutubeClick != undefined) ? $params.onFollowYoutubeClick : NCOMFooter.onFollowYoutubeClick;
+		NCOMFooter.onNintendoNewsletterClick = ($params.onNintendoNewsletterClick != undefined) ? $params.onNintendoNewsletterClick : NCOMFooter.onNintendoNewsletterClick;
+		NCOMFooter.onEnableEvents();
+
+	},	
+	onEnableEvents: function () {
+		document.addEventListener('click', function(event) {
+			var id = event.target.id;
+			switch(id) {
+			case 'footer-followus-container-facebook':
+				NCOMFooter.onFollowFacebookClick(); break;
+			case 'footer-followus-container-twitter':
+				NCOMFooter.onFollowTwitterClick(); break;
+			case 'footer-followus-container-youtube':
+				NCOMFooter.onFollowYoutubeClick(); break;
+			}
+		});
+		
+		var newsletter = document.querySelector('#footer-newsletter-link');
+		if (newsletter) {
+			newsletter.addEventListener('click', function(event) {
+				event.preventDefault();
+				NCOMFooter.onNintendoNewsletterClick();
+			});
+		}
+	},
+	onFollowFacebookClick: function () {
+		Omniture.trackFacebookNOA();
+	},
+	onFollowYoutubeClick: function () {
+		Omniture.trackYouTubeNOA();
+	},
+	onFollowTwitterClick: function () {
+		Omniture.trackTwitterNOA();
+	},
+	onNintendoNewsletterClick: function () {
+		Omniture.trackNewsletter(true, document.domain);
+	}
+}

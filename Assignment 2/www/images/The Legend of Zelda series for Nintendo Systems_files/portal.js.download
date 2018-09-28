@@ -1,0 +1,474 @@
+/**
+ * @module     widgets/Dust
+ * @desc       Dust Animation
+ * @copyright  Copyright (c) 2015 Nintendo
+ * @requires   jquery, TweenMax
+ * @example    var dust = new Dust('.parent', '.custom-dust', 0.5, 1, 0);
+ */
+
+/**
+ * Creates custom dust particles that get animated as items fall into place
+ * @alias module:widgets/Dust
+ * @param  {String} dustParentSelector Parent selector of where to add the dust dom elements
+ * @param  {String} dustCustomClass    Custom class added to dust grouping for reference
+ * @param  {Number} dustMinScale       Min value to scale particles
+ * @param  {Number} dustMaxScale       Max value to scale particles
+ * @param  {Number} dustDelay          Time to delay animation
+ */
+var Dust = function(dustParentSelector, dustCustomClass, dustMinScale, dustMaxScale, dustDelay) {
+
+  $(dustParentSelector).append('<div class="dust-particles ' + dustCustomClass + '"><div class="dust-left"><div class="dust dust-1"></div><div class="dust dust-2"></div><div class="dust dust-3"></div></div><div class="dust-right"><div class="dust dust-1"></div><div class="dust dust-2"></div><div class="dust dust-3"></div></div></div>');
+  this.$dust = $('.' + dustCustomClass);
+  // cache individual particles
+  this.ui = {
+    dust: {
+      left: {
+        d1: this.$dust.find('.dust-left .dust-1'),
+        d2: this.$dust.find('.dust-left .dust-2'),
+        d3: this.$dust.find('.dust-left .dust-3')
+      },
+      right: {
+        d1: this.$dust.find('.dust-right .dust-1'),
+        d2: this.$dust.find('.dust-right .dust-2'),
+        d3: this.$dust.find('.dust-right .dust-3')
+      }
+    }
+  };
+  this.minScale = dustMinScale;
+  this.maxScale = dustMaxScale;
+  this.delay = dustDelay;
+  TweenMax.set([this.ui.dust.left.d1, this.ui.dust.left.d2, this.ui.dust.left.d3, this.ui.dust.right.d1, this.ui.dust.right.d2, this.ui.dust.right.d3], {scaleX: 0, scaleY: 0, x: 0, y: 0});
+};
+
+Dust.prototype = {
+  /**
+   * Initializes the dust
+   */
+  init: function() {
+
+    TweenMax.set([this.ui.dust.left.d1, this.ui.dust.left.d2, this.ui.dust.left.d3, this.ui.dust.right.d1, this.ui.dust.right.d2, this.ui.dust.right.d3], {scaleX: 0, scaleY: 0, x: 0, y: 0});
+    // animate left
+    this._animateLeft(this.ui.dust.left.d1, this.delay);
+    this._animateLeft(this.ui.dust.left.d2, this.delay + 0.1);
+    this._animateLeft(this.ui.dust.left.d3, this.delay + 0.2);
+    // amimate right
+    this._animateRight(this.ui.dust.right.d1, this.delay);
+    this._animateRight(this.ui.dust.right.d2, this.delay + 0.1);
+    this._animateRight(this.ui.dust.right.d3, this.delay + 0.2);
+  },
+
+  /**
+   * Animates dust particles to the left
+   * @param  {Object} dustSelector jQuery object representing dom element
+   * @param  {Number} dustDelay    Time to delay animation
+   */
+  _animateLeft: function(dustSelector, dustDelay) {
+    var randomScale = this._getRandomInt(this.minScale, this.maxScale);
+    TweenMax.to(dustSelector, 1, {bezier:[{scaleX: randomScale, scaleY: randomScale, x: this._getRandomInt(-40, -60), y: this._getRandomInt(-25, 25), rotation: this._getRandomInt(160, 180)}, {scaleX: 0, scaleY: 0, x: this._getRandomInt(-50, -80), y: this._getRandomInt(-50, 50), rotation: this._getRandomInt(500, 540)}], delay: dustDelay, ease: Cubic.easeOut});
+  },
+
+  /**
+   * Animates dust particles to the right
+   * @param  {Object} dustSelector jQuery object representing dom element
+   * @param  {Number} dustDelay    Time to delay animation
+   */
+  _animateRight: function(dustSelector, dustDelay) {
+    var randomScale = this._getRandomInt(this.minScale, this.maxScale);
+    TweenMax.to(dustSelector, 1, {bezier:[{scaleX: randomScale, scaleY: randomScale, x: this._getRandomInt(40, 60), y: this._getRandomInt(-25, 25), rotation: this._getRandomInt(-160, -180)}, {scaleX: 0, scaleY: 0, x: this._getRandomInt(50, 80), y: this._getRandomInt(-50, 50), rotation: this._getRandomInt(-500, -540)}], delay: dustDelay, ease: Cubic.easeOut});
+  },
+
+  /**
+   * Returns a random number within a specified range
+   * @param  {Number} min Minimum number the random returned value can be
+   * @param  {Number} max Maximum number the random returned value can be
+   * @return {Number}     Return a random number within range
+   */
+  _getRandomInt: function(min, max) {
+    return Math.random() * (max - min) + min;
+  },
+
+  uninit: function() {
+    this.$dust.remove();
+  }
+};
+
+
+Omniture.prefix = "us:microsite:zelda:universe";
+Omniture.suite = "ncomglobal,ncomzeldauni"; //site name
+Omniture.channel = "us:microsite:3ds"; //Site Section
+Omniture.prop1 = "us:zelda universe"; //Product name
+Omniture.prop2 = "game"; //Content type
+Omniture.prop6 = "us_en"; //Locale
+Omniture.prop7 = "xAYNy6ZBrXXvmtev0W0aGPUWIrewwhh_"; //Compel product ID
+Omniture.prop10 = ""; //Game Title
+Omniture.prop11 = ""; //Game Genre
+Omniture.prop12 = ""; //Game Publisher
+Omniture.prop14 = "microsite"; //Site type. ie microsite
+Omniture.prop16 = "us:microsite:zelda universe"; //site name
+Omniture.trackPage("home", true, true);
+
+Footer.insert({
+	target:"#global-footer",
+	esrb: "/universe/_img/footer/e_t_esrb.gif",
+	privacy: true,
+	newsletter: false,
+	nintendo: true,
+	follow: true,
+	light: true,
+	amiibo: false,
+	language: "en"
+});
+/*
+Social.insert({
+	url: "http://www.zelda.com/",
+	target: "#target-social"
+});
+*/
+
+var TwilightMotes = (function() {
+        function a(a, b) {
+            return Math.floor(Math.random() * (b - a + 1)) + a
+        }
+
+        function b() {
+            var b = document.getElementById(g),
+                c = document.createElement("div"),
+                d = document.createElement("div"),
+                e = b.offsetWidth,
+                f = b.offsetHeight,
+                h = a(45, 100) / 100;
+            c.className = "mote", d.className = "twilight-particle", c.appendChild(d), b.appendChild(c), TweenLite.set(b, {
+                perspective: 1200
+            }), TweenLite.set(c, {
+                x: a(0, e),
+                y: f + 80,
+                opacity: a(65, 90) / 100,
+                scaleX: h,
+                scaleY: h,
+                rotationY: a(1, 90)
+            });
+            var i = new TimelineMax({
+                repeat: -1,
+                repeatDelay: a(1, 5)
+            });
+            i.addLabel("twist1", 1).addLabel("twist2", 3).addLabel("fade1", 4), i.to(c, a(3, 4), {
+                rotationY: 1080,
+                ease: Power4.easeOut
+            }, "twist1");
+            var j = e / 2,
+                k = 9,
+                l = c._gsTransform.x;
+            if (.25 * e > l || l > .75 * e) i.to(c, a(5, 7), {
+                y: .1 * a(3, 9) * f,
+                ease: Sine.easeOut
+            }, "twist1");
+            else {
+                var m = .01 * Math.pow(l - j, 2) + k,
+                    n = .1 * a(9, m) * f;
+                n = .01 * a(80, 95) * f, i.to(c, a(5, 7), {
+                    y: n,
+                    ease: Sine.easeOut
+                }, "twist1")
+            }
+            return i.to(c, a(4, 5), {
+                rotationY: -360,
+                ease: Power2.easeOut
+            }, "twist2"), i.to(c, 1.5, {
+                opacity: 0,
+                ease: Linear.easeOut
+            }, "fade1"), i.play(), i
+        }
+
+        function c() {
+            var a = 200,
+                c = .05;
+            for (f = new TimelineMax({
+                    repeat: 0,
+                    delay: 0
+                }), i = 0; i < a; i++) f.add(b(), c * i)
+        }
+
+        function d(a) {
+            var b = navigator.platform.indexOf("Nintendo WiiU") >= 0 ? !0 : !1,
+                d = navigator.platform.indexOf("Nintendo 3DS") >= 0 ? !0 : !1;
+            if (g = a, !b && !d) {
+                var e = 60,
+                    h = .1;
+                c(), f.to(f, e, {
+                    timeScale: h
+                })
+            }
+        }
+
+        function e(a) {
+			if (f) {
+				for (jContainer = document.getElementById(a), f.kill(); jContainer.hasChildNodes();) jContainer.removeChild(jContainer.lastChild)
+			}
+        }
+        var f, g;
+        return {
+            init: d,
+            destroy: e
+        }
+  }) ( window );
+
+
+var slider = new NIN.slider( '#hero-slider', {
+	nav: false,
+	autoPlay: true,
+	autoPlaySpeed: 5.2,
+	startupDelay: 5,
+	animationSpeed: 0.8,
+	loop: 'infinite',
+	pagination: "#pagination",
+	onChangeStart: function(e) {
+		if (e.nextSlide == 3 && e.nextSlide != e.currentSlide) {
+			TweenMax.set($('.slide.tri-force-heroes .slide-cta'), {opacity: 0, y: -500});
+			TweenMax.set($('.slide.tri-force-heroes .slide-logo'), {opacity: 0, y: -500});
+			TweenMax.set($('.slide.tri-force-heroes .slide-character'), {opacity: 0, y: -500});
+		}
+	},
+	onChangeEnd: function( e ) {
+		changeActiveTab( e.currentSlide );
+		if (e.currentSlide == 3 && e.nextSlide != e.currentSlide){
+			$('.dust-particles').remove();
+			var dustA = new Dust('.slide.tri-force-heroes .slide-cta', 'cta-dust', 0.4, 0.6, 1);
+			var dustB = new Dust('.slide.tri-force-heroes .slide-logo', 'logo-dust', 0.4, 0.6, 1.7);
+			var dustC = new Dust('.slide.tri-force-heroes .slide-character', 'character-dust', 0.4, 0.6, 0.3);
+			dustB.init();
+			dustA.init();
+			dustC.init();
+			TweenMax.to($('.slide.tri-force-heroes .slide-cta'), 0.5, {opacity: 1, delay: 0.75, y:0, ease: Bounce.easeOut});
+			TweenMax.to($('.slide.tri-force-heroes .slide-logo'), 0.5, {opacity: 1, delay: 1.5, y:0, ease: Bounce.easeOut});
+			TweenMax.to($('.slide.tri-force-heroes .slide-character'), 0.5, {opacity: 1, delay: 0, y:0, ease: Bounce.easeOut});
+		}
+
+	    if (e.currentSlide == 2 && e.nextSlide != e.currentSlide) {
+	      TwilightMotes.init("mote-stage");
+	    } else {
+	      TwilightMotes.destroy("mote-stage");
+	    }
+
+
+	    if (e.currentSlide == 0 && e.nextSlide != e.currentSlide) {
+	      FlowerPetals.init("petal-stage");
+	    } else {
+	      FlowerPetals.destroy("petal-stage");
+	    }
+	}
+});
+
+$("#tabs").children().on( 'click', function(e) {
+	e.preventDefault();
+	var index = $(this).data('index');
+	var title = $(this).children('img').attr('alt');
+	if (index && title) {
+    Omniture.trackLink(34, 'Home Page Promo', 13, title + index);
+  }
+	slider.go( $(this).index() );
+});
+
+$('.zelda-com-btn').on('click', function(e) {
+  var title = $(this).attr('href');
+  if (title) {
+    Omniture.trackLink(34, 'Game Tile', 13, title);
+  }
+});
+
+$('.slide-link').on('click', function (e) {
+  var title = $(this).attr('title');
+  if (title) {
+    Omniture.trackLink(34, 'Slide Link', 13, title);
+  }
+
+});
+
+function changeActiveTab( activeIndex ) {
+	$("#tabs .is-active").removeClass("is-active");
+
+	$("#tabs").children().eq( activeIndex ).addClass("is-active");
+}
+slider.initialize();
+
+// clip path test for breath of the wild
+// http://codepen.io/anon/pen/YXyyMJ
+var areClipPathShapesSupported = function () {
+
+	var base = 'clipPath',
+		prefixes = [ 'webkit', 'moz', 'ms', 'o' ],
+		properties = [ base ],
+		testElement = document.createElement( 'testelement' ),
+		attribute = 'polygon(50% 0%, 0% 100%, 100% 100%)';
+
+	// Push the prefixed properties into the array of properties.
+	for ( var i = 0, l = prefixes.length; i < l; i++ ) {
+		var prefixedProperty = prefixes[i] + base.charAt( 0 ).toUpperCase() + base.slice( 1 ); // remember to capitalize!
+		properties.push( prefixedProperty );
+	}
+
+	// Interate over the properties and see if they pass two tests.
+	for ( var i = 0, l = properties.length; i < l; i++ ) {
+		var property = properties[i];
+
+		// First, they need to even support clip-path (IE <= 11 does not)...
+		if ( testElement.style[property] === '' ) {
+
+			// Second, we need to see what happens when we try to create a CSS shape...
+			testElement.style[property] = attribute;
+			if ( testElement.style[property] !== '' ) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+};
+
+if ( !areClipPathShapesSupported() ) {
+	document.documentElement.classList.add("no-clippath");
+}
+
+
+var FlowerPetals = ( function(){
+	
+	var moteTimeline,
+		containerName;
+	
+	function randomInt( a, b ) {
+		return Math.floor( Math.random() * ( b - a + 1 ) ) + a;
+	}
+
+	function getAnimation() {
+		
+		// Create/ID some DOM objects
+		var jContainer = document.getElementById( containerName ),	
+			domElement = document.createElement( "div" ),
+			petalParticle = document.createElement( "div" );
+		
+		// Create some numerical variables
+		var stageWidth = jContainer.offsetWidth,
+			stageHeight = jContainer.offsetHeight,
+			thisMoteScale = 1;
+				
+		// Add necessary classes to DOM elements
+		domElement.className = "mote";
+		petalParticle.className = "petal-particle";
+		
+		// Add DOM elements to each other and, well, the DOM
+		domElement.appendChild( petalParticle );
+		jContainer.appendChild( domElement );
+		
+		// Set uniform perspective for container object.
+		TweenLite.set( jContainer, {
+			perspective: 1200
+		});
+		
+		// Set starting properties for an individual particle		
+		TweenLite.set( domElement, {
+			x: randomInt( 0, stageWidth ),						// randomize the X along the width of the page
+			y: randomInt( stageHeight - 100, stageHeight + 80 ),								// start just off screen
+			opacity: 100,
+			scaleX: thisMoteScale,								// random scale, but keep it square!
+			scaleY: thisMoteScale,
+			rotation: randomInt( 1 , 360 ),
+			rotationY: randomInt( 1 , 90 )						// start at a random twist
+		});
+		
+		
+		// Create the timeline for this particle
+		var singleMoteTimeline = new TimelineMax({
+			repeat: -1,											// repeat forever
+			repeatDelay: randomInt( 1, 5 )						// randomize the delay on the repeat
+		});
+		
+		// Label keyframes on the particle's timeline		
+		singleMoteTimeline.addLabel( "twist1", 1 ).addLabel( "twist2", 3 ).addLabel( "fade1", 4 );
+		
+		// set the properties to change at each keyframe
+		singleMoteTimeline.to( domElement, randomInt( 4.5, 6 ), {
+			rotationY: 1080,									// three twists clockwise in 3-4 seconds
+			rotation: 360,
+			ease: Power4.easeOut
+		}, "twist1");
+		
+		var parabolaVertexX = stageWidth / 2,
+			parabolaVertexY = 9,
+			thisParticleX = domElement._gsTransform.x;
+						
+
+			singleMoteTimeline.to( domElement, randomInt( 7.5, 10.5 ), {
+				y: ( randomInt( 3, 9 ) * 0.1 ) * stageHeight,		// float to a random height up the page in 5-7 seconds
+				ease: Sine.easeOut
+			}, "twist1");
+
+		
+		singleMoteTimeline.to( domElement, randomInt( 6, 7.5 ), {
+			rotation: 360,
+			rotationY: -360,									// four twists counterclockwise in 4-5 seconds
+			ease: Power2.easeOut
+		}, "twist2");
+		
+		singleMoteTimeline.to( domElement, 2.25, {
+			opacity: 0,											// fade into oblivion in 1.5 seconds
+			ease: Linear.easeOut
+		}, "fade1");
+		
+		// start this particle's motion
+		singleMoteTimeline.play();
+		
+		// return the animated timeline to be added to its parent timeline		
+		return singleMoteTimeline;
+	}
+
+	function populateStage() {
+		var PARTICLE_COUNT = 50,								// How many particles are alive at once?
+			PARTICLE_SPACING = .2;							// How long a wait between particles (in seconds)
+		
+		// Add a certain number of particles to the stage on a determined interval		
+		for ( moteTimeline = new TimelineMax({
+			repeat: 0,
+			delay: 0
+		}), i = 0; i < PARTICLE_COUNT; i++) moteTimeline.add( getAnimation(), PARTICLE_SPACING * i );
+	}
+	
+	
+	function _init( stageContainer ) {
+		// determine if you're in an unsupported browser
+		var isWiiU = navigator.platform.indexOf( "Nintendo WiiU" )  >= 0 ? !0 : !1,
+			is3DS = navigator.platform.indexOf( "Nintendo 3DS" ) >= 0 ? !0 : !1;	
+	
+		// get the ID of the target element
+		containerName = stageContainer;
+		
+		// If we're on a supported platform...
+		if ( !isWiiU && !is3DS ) {
+			
+			//Set a few constants
+			var TIMELINE_DURATION = 60,
+				TIME_SCALE = 0.1;
+			
+			// populate the stage with particles...
+			populateStage();
+			
+			//... and get things moving!
+			moteTimeline.to( moteTimeline, TIMELINE_DURATION, {
+				timeScale: TIME_SCALE
+				}
+			);
+		}
+	}
+	
+	function _destroy( stageContainer ) {
+		jContainer = document.getElementById( stageContainer );
+		moteTimeline.kill();
+		while (jContainer.hasChildNodes()) {
+		    jContainer.removeChild(jContainer.lastChild);
+		}
+	}
+	
+	return {
+		init : _init,
+		destroy : _destroy
+	};
+	
+})();

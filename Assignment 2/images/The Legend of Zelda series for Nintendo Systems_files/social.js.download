@@ -1,0 +1,31 @@
+var Social = {
+	trackingUrl: null,
+	markup: function () {
+		var facebookImage = ( window.location.protocol === "https:" ) ? "https://share.nintendo.com/addthis/img/btn_facebook.png" : "http://media.nintendo.com/share/addthis/img/btn_facebook.png";
+		var html = '<a id="btn-include-facebook" href="http://www.facebook.com/sharer.php?u='+this.trackingUrl+'&'+(new Date).valueOf()+'" target="_blank" style="margin: 0 7px;"><img src="' + facebookImage + '" width="24" height="24" alt="Share on Facebook"></a>';
+		html += '<iframe src="//www.facebook.com/plugins/like.php?href='+this.trackingUrl+'&amp;width=50&amp;height=21&amp;colorscheme=light&amp;layout=button_count&amp;action=like&amp;show_faces=true&amp;send=false" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:50px; height:21px;" allowTransparency="true"></iframe>';
+		
+		return html;
+	},
+	insert: function ($params) {
+		if($params.url) {
+			this.trackingUrl = encodeURIComponent($params.url)
+		} else {
+			this.trackingUrl = encodeURIComponent(location.href);
+		}		
+		var mTarget = $params.target.replace("#", "");
+		document.getElementById(mTarget).innerHTML= this.markup();
+		this.initEvents();
+	},
+	initEvents: function() {
+		var self = this;
+		
+		document.getElementById('btn-include-facebook').onclick = function(e){
+			if(typeof Omniture !== "undefined") {
+				Omniture.trackFacebook();
+			}
+			window.open('http://www.facebook.com/sharer.php?u='+self.trackingUrl+'&'+(new Date).valueOf(),'sharer','toolbar=0,status=0,width=626,height=436');
+			e.preventDefault();
+		};
+	}
+};

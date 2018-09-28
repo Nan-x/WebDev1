@@ -1,0 +1,149 @@
+var OVPplayer = {
+	color: "wii", //wiiu, wii, 3ds or hex color
+	autohide:true,
+	autoplay:false,
+	loop:false,
+	title:false,
+	embedCode: "",
+	dontreplace: false, //embeds vid inside element
+	target: "",
+	media_target: "", //element containing the actual player object (swf/html5). When setting dontreplace to false, this will be equal to the target element.
+	playerid: "", //ovp communications
+	html5_embedded: false,
+	swf_embedded: false,
+	replaced_markup: "",
+	forcehtml: false,
+	height: "100%",
+	width: "100%",
+	chromeless: false,
+	ref: null,
+	insert: function($params) {
+		ref = this;
+		this.target = $params.target || this.target;
+		this.color = $params.color || this.color;
+		this.autohide = $params.autohide || this.autohide;
+		this.autoplay = $params.autoplay || this.autoplay;
+		this.loop = $params.loop || this.loop;
+		this.title = $params.title || this.title;
+		this.dontreplace = $params.dontreplace || this.dontreplace;
+		this.forcehtml = $params.forcehtml || this.forcehtml;
+		this.embedCode = $params.embedCode || this.embedCode;
+		this.chromeless = $params.chromeless || this.chromeless;
+		this.callback =  $params.callback || this.callback;
+		$params.callback = this.getFlashCallBack; //hijack callback	
+
+				
+		if ($params.width != undefined) { 
+			this.width = !isNaN($params.width) ? $params.width + "px": this.width;
+			$params.width = "";		
+		} else {
+			this.width = "100%";
+		}
+		
+		if ($params.height != undefined) { 
+			this.height = !isNaN($params.height) ? $params.height + "px": this.height;
+			$params.height = "";
+		} else {
+			this.height = "100%";
+		}		
+		this.target = this.target.replace("#", "");		
+
+		this.replaced_markup = $("#"+this.target);
+		if (swfobject.hasFlashPlayerVersion("10.0.0") && !this.forcehtml) {
+			var flashvars = $params;
+			var params = {
+					allowFullScreen:"true", //required
+					wmode: "transparent",
+					allowScriptAccess:"always" //required
+			}
+			this.media_target = "ovpVid"+Math.floor(Math.random()*5000);
+			if(this.dontreplace) {
+				$("#"+this.target).html("<div id='"+this.media_target+"'> </div>");
+			} else {
+				this.media_target = this.target;
+			}
+			swfobject.embedSWF(window.shareConfig.url+"/swf/ovp_player.swf", this.media_target, this.width, this.height, "10.0.0", "", flashvars, params, {id:this.media_target, name:this.media_target});
+			this.swf_embedded = true;
+		} else {
+				this.media_target = "ovpVid"+Math.floor(Math.random()*5000);
+				if(this.dontreplace) {
+					$("#"+this.target).html("<div id='"+this.media_target+"' style='width:"+this.width+"; height:"+this.height+";'> </div>");
+				} else {
+					$("#"+this.target).attr("id", this.media_target).attr("style", "width:"+this.width+"; height:"+this.height+";"); //change the target id to a unique id	
+				}
+				this.playerid = OO.Player.create(this.media_target, this.embedCode, { width:this.width, height:this.width});
+				this.html5_embedded = true;						
+		}	
+	},
+	getSWFId: function() {
+		 if (navigator.appName.indexOf("Microsoft") != -1) {
+			 return window[this.media_target];
+		 } else {
+			 return document[this.media_target];
+		 }
+		
+	},
+	play: function($param) {
+		if(!this.html5_embedded) {
+			this.getSWFId().ovpPlay(true);
+		} else {			
+			this.playerid.playMovie();			
+		}
+	},
+	pause: function() {
+		if(!this.html5_embedded) {
+			this.getSWFId().ovpPlay(false);
+		} else {			
+			this.playerid.pauseMovie();			
+		}
+	},
+	jumpto: function($param) {
+		this.jumpTo($param);
+	},
+	setVol: function(volNum,timeNum) {
+		this.getSWFId().ovpVolume(volNum,timeNum);
+	},
+	jumpTo: function($param) {
+		if(!this.html5_embedded) {
+			this.getSWFId().ovpJumpto($param);
+		} else {
+			this.playerid.setPlayheadTime($param);
+		}
+	},
+	setEmbedCode: function($embedCode) {
+		if(this.html5_embedded) {
+			this.playerid.setEmbedCode($embedCode, {});
+		}
+	},
+	getFlashCallBack: function(data) {
+		ref.callBackData = data;
+		ref.fireCallBack(this.callBackData);
+	},
+	fireCallBack: function() {
+		this.callback.call(this, this.callBackData);		
+	},
+	destroy: function() {
+		if(this.html5_embedded && this.playerid !== "") {
+			this.playerid.destroy();
+			this.html5_embedded = false;
+			this.playerid == "";
+			
+			if(this.dontreplace) {
+				$("#"+this.target).html(" ");				
+			} else {
+				$("#"+this.target).replaceWith(this.replaced_markup);
+			}
+		} else if(this.swf_embedded) {
+			this.swf_embedded = false;
+			
+			if(this.dontreplace) {
+				$("#"+this.target).html(" ");				
+			} else {
+				$("#"+this.target).replaceWith(this.replaced_markup);
+			}
+		}
+	
+		
+	}
+	
+}
